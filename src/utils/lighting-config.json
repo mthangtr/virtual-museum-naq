@@ -1,0 +1,153 @@
+{
+  "testRoom": {
+    "ambient": {
+      "type": "ambient",
+      "color": "#FFFFFF",
+      "intensity": 0.6
+    },
+    "directional": {
+      "type": "directional",
+      "color": "#FFFFFF",
+      "intensity": 0.8,
+      "position": [5, 10, 5],
+      "castShadow": true,
+      "shadowMapWidth": 1024,
+      "shadowMapHeight": 1024
+    },
+    "hemisphere": {
+      "type": "hemisphere",
+      "color": "#87CEEB",
+      "groundColor": "#7BC8A4",
+      "intensity": 0.5
+    }
+  },
+  "room1_departure": {
+    "ambient": {
+      "type": "ambient",
+      "color": "#E3F2FD",
+      "intensity": 0.5
+    },
+    "directional": {
+      "type": "directional",
+      "color": "#1976D2",
+      "intensity": 0.9,
+      "position": [8, 12, 4],
+      "castShadow": true
+    },
+    "hemisphere": {
+      "type": "hemisphere",
+      "color": "#2196F3",
+      "groundColor": "#0D47A1",
+      "intensity": 0.6
+    },
+    "mood": "bright, hopeful, sea-themed"
+  },
+  "room2_lenin": {
+    "ambient": {
+      "type": "ambient",
+      "color": "#C5CAE9",
+      "intensity": 0.4
+    },
+    "directional": {
+      "type": "directional",
+      "color": "#FFF9E6",
+      "intensity": 0.7,
+      "position": [3, 8, 3],
+      "castShadow": true
+    },
+    "spot": {
+      "type": "spot",
+      "color": "#FFD54F",
+      "intensity": 1.2,
+      "position": [0, 5, 0],
+      "target": [0, 1, 0],
+      "angle": 30,
+      "penumbra": 0.3,
+      "comment": "Spotlight on Lenin's book"
+    },
+    "hemisphere": {
+      "type": "hemisphere",
+      "color": "#5C6BC0",
+      "groundColor": "#283593",
+      "intensity": 0.4
+    },
+    "mood": "library, knowledge, focused light"
+  },
+  "room3_guangzhou": {
+    "ambient": {
+      "type": "ambient",
+      "color": "#FFE0B2",
+      "intensity": 0.5
+    },
+    "directional": {
+      "type": "directional",
+      "color": "#FF9800",
+      "intensity": 0.8,
+      "position": [6, 10, 6],
+      "castShadow": true
+    },
+    "hemisphere": {
+      "type": "hemisphere",
+      "color": "#FFB74D",
+      "groundColor": "#E65100",
+      "intensity": 0.5
+    },
+    "mood": "warm, educational, classroom"
+  },
+  "room4_hongkong": {
+    "ambient": {
+      "type": "ambient",
+      "color": "#FFCDD2",
+      "intensity": 0.6
+    },
+    "directional": {
+      "type": "directional",
+      "color": "#F44336",
+      "intensity": 0.9,
+      "position": [5, 12, 5],
+      "castShadow": true
+    },
+    "point": {
+      "type": "point",
+      "color": "#FFD54F",
+      "intensity": 1.5,
+      "position": [0, 3, 0],
+      "distance": 10,
+      "decay": 2,
+      "comment": "Overhead meeting room light"
+    },
+    "hemisphere": {
+      "type": "hemisphere",
+      "color": "#EF5350",
+      "groundColor": "#C62828",
+      "intensity": 0.7
+    },
+    "mood": "revolutionary red, dramatic, historic"
+  },
+  "roomEnding_newEra": {
+    "ambient": {
+      "type": "ambient",
+      "color": "#FFFDE7",
+      "intensity": 0.8
+    },
+    "directional": {
+      "type": "directional",
+      "color": "#FFD54F",
+      "intensity": 1.0,
+      "position": [0, 15, 0],
+      "castShadow": false
+    },
+    "hemisphere": {
+      "type": "hemisphere",
+      "color": "#FDD835",
+      "groundColor": "#C62828",
+      "intensity": 0.8
+    },
+    "mood": "bright, victorious, celebratory"
+  },
+  "notes": {
+    "intensity_range": "0.0 to 1.5 (higher = brighter)",
+    "color_format": "Hex codes (#RRGGBB)",
+    "performance": "Limit to 3-4 lights per room for optimal FPS"
+  }
+}

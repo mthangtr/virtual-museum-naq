@@ -1,0 +1,37 @@
+{
+  "name": "virtual-museum-naq",
+  "version": "1.0.0",
+  "description": "Virtual Museum of Nguyen Ai Quoc - An interactive 3D educational experience built with A-Frame",
+  "main": "index.html",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "http-server -p 8000 -c-1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mthangtr/virtual-museum-naq.git"
+  },
+  "keywords": [
+    "aframe",
+    "webxr",
+    "virtual-museum",
+    "3d",
+    "educational",
+    "history",
+    "vietnam"
+  ],
+  "author": "VNR202 Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mthangtr/virtual-museum-naq/issues"
+  },
+  "homepage": "https://github.com/mthangtr/virtual-museum-naq#readme",
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "howler": "^2.2.4",
+    "http-server": "^14.1.1"
+  }
+}
