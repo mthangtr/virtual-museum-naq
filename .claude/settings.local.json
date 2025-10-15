@@ -6,7 +6,8 @@
       "Bash(npm init -y)",
       "Bash(findstr:*)",
       "Bash(npm install:*)",
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

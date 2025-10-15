@@ -15,8 +15,8 @@
   <!-- A-Frame Environment Component -->
   <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
 
-  <!-- A-Frame Particle System -->
-  <script src="https://unpkg.com/aframe-particle-system-component@1.0.11/dist/aframe-particle-system-component.min.js"></script>
+  <!-- A-Frame Particle System - Updated version for A-Frame 1.4.0 compatibility -->
+  <script src="https://unpkg.com/aframe-particle-system-component@1.0.14/dist/aframe-particle-system-component.min.js"></script>
 
   <!-- GSAP for animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -39,7 +39,10 @@
   <script src="src/components/progress-tracker.js"></script>
   <script src="src/components/click-forwarder.js"></script>
   <script src="src/components/cursor-feedback.js"></script>
-  
+
+  <!-- Sprint 6 Components: Special Events -->
+  <script src="src/components/flag-merger-event.js"></script>
+
   <!-- Utilities (Sprint 3) -->
   <script src="src/utils/ui-controller.js"></script>
 
@@ -59,16 +62,28 @@
       <!-- Vietnamese Font Support -->
       <img id="font-roboto" src="https://cdn.aframe.io/fonts/Roboto-msdf.png" crossorigin="anonymous">
 
-      <!-- Models will be loaded here -->
-      <!-- Textures will be loaded here -->
-      <!-- Audio will be loaded here -->
+      <!-- Room 1 Models (1911-1919: Khởi hành) -->
+      <a-asset-item id="model-suitcase" src="assets/models/room1/Simple Suitcase 3D Model_r1.glb"></a-asset-item>
+      <a-asset-item id="model-map" src="assets/models/room1/3D Map Model_r1.glb"></a-asset-item>
+      <a-asset-item id="model-paper" src="assets/models/room1/Paper 3D Model_r1.glb"></a-asset-item>
+
+      <!-- Room 2 Models (1920-1923: Ánh sáng Lênin) -->
+      <a-asset-item id="model-lenin-book" src="assets/models/room2/lenin_r2.glb"></a-asset-item>
+      <a-asset-item id="model-newspaper" src="assets/models/room2/newspaper_r2.glb"></a-asset-item>
+      <a-asset-item id="model-photo-frame" src="assets/models/room2/photo_frame_r3.glb"></a-asset-item>
+
+      <!-- Textures -->
+      <!-- Placeholder for future texture loading -->
+
+      <!-- Audio -->
+      <!-- Placeholder for future audio loading -->
     </a-assets>
 
     <!-- Room Manager (handles room switching) -->
     <a-entity
       room-manager="
         currentRoom: home;
-        rooms: home, room1;
+        rooms: home, room1, room2, room3, room4, ending;
         transitionDuration: 1500;
       ">
     </a-entity>
@@ -104,7 +119,7 @@
         ">
       </a-entity>
 
-      <!-- Test Objects -->
+      <!-- Decorative Objects (non-interactive) -->
       <a-box
         position="0 1 -8"
         rotation="0 45 0"
@@ -126,41 +141,86 @@
         shadow="cast: true">
       </a-sphere>
 
-      <!-- Door to Room 1 -->
+      <!-- Information Text -->
+      <a-entity
+        position="0 1.5 -7"
+        vietnamese-text="
+          value: Chào mừng đến với bảo tàng!\nĐi thẳng và nhấn E để bắt đầu hành trình;
+          color: #1976D2;
+          fontSize: 0.3;
+          align: center;
+          width: 5;
+        ">
+      </a-entity>
+
+      <!-- Door to Room 1 (UNLOCKED - No requirements) -->
       <a-entity
         position="0 0 -10"
         door-portal="
           targetRoom: room1;
           locked: false;
-          activationDistance: 3;
+          activationDistance: 5;
         ">
-        <!-- Door frame -->
+        <!-- Door frame (Golden to indicate unlocked) -->
         <a-box
           position="0 1 0"
           width="2"
           height="3"
           depth="0.2"
-          color="#8B4513"
-          shadow="cast: true">
+          color="#FFD700"
+          shadow="cast: true"
+          material="emissive: #FFD700; emissiveIntensity: 0.3">
         </a-box>
 
         <!-- Door label -->
         <a-entity
           position="0 3.5 0.2"
           vietnamese-text="
-            value: Room 1\n1911-1919;
-            color: #FFFFFF;
-            fontSize: 0.2;
+            value: Phòng 1: Khởi hành\n1911-1919\n▶ Nhấn E để vào ◀;
+            color: #FFEB3B;
+            fontSize: 0.25;
             align: center;
-            width: 2;
+            width: 3;
           ">
         </a-entity>
+
+        <!-- Glowing ring indicator -->
+        <a-torus
+          position="0 1.5 0.3"
+          radius="1.2"
+          radius-tubular="0.05"
+          color="#FFD700"
+          material="emissive: #FFD700; emissiveIntensity: 0.8"
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear">
+        </a-torus>
+
+        <!-- Large activation zone indicator (ground circle) -->
+        <a-circle
+          position="0 0.01 0"
+          radius="5"
+          rotation="-90 0 0"
+          color="#FFD700"
+          material="opacity: 0.2; transparent: true; shader: flat"
+          animation="property: material.opacity; from: 0.1; to: 0.3; dur: 2000; dir: alternate; loop: true">
+        </a-circle>
+
+        <!-- Floating arrows pointing to door -->
+        <a-cone
+          position="0 2.5 1"
+          rotation="180 0 0"
+          height="0.5"
+          radius-bottom="0.3"
+          color="#FFEB3B"
+          material="emissive: #FFEB3B; emissiveIntensity: 0.8"
+          animation="property: position; from: 0 2.5 1; to: 0 2.2 1; dur: 1000; dir: alternate; loop: true; easing: easeInOutQuad">
+        </a-cone>
       </a-entity>
 
     </a-entity>
 
     <!-- ============================================ -->
     <!-- ROOM 1 (1911-1919: Khởi hành) -->
+    <!-- Sea/Harbor Theme - Blue palette -->
     <!-- ============================================ -->
     <a-entity id="room1" visible="false">
 
@@ -169,93 +229,217 @@
         progress-tracker="
           roomId: room1;
           requiredObjects: 3;
-          objects: obj-room1-ship, obj-room1-map, obj-room1-diary;
+          objects: obj-room1-suitcase, obj-room1-map, obj-room1-petition;
           enablePersistence: true;
           autoUnlockDoor: true;
         ">
       </a-entity>
 
-      <!-- Sky (different color) -->
-      <a-sky color="#1976D2"></a-sky>
+      <!-- Sky (Sea blue gradient) -->
+      <a-sky color="#2196F3"></a-sky>
 
-      <!-- Ground Plane -->
+      <!-- Ground Plane (Harbor wooden floor) -->
       <a-plane
         ground
         position="0 0 0"
         rotation="-90 0 0"
         width="50"
         height="50"
-        color="#4A90E2"
-        shadow="receive: true">
+        color="#6D4C41"
+        shadow="receive: true"
+        material="roughness: 0.8">
       </a-plane>
 
-      <!-- Room Title with Vietnamese Support -->
+      <!-- Room Walls (Sea-themed backdrop) -->
+      <!-- Back wall with ocean view -->
+      <a-plane
+        position="0 2.5 -15"
+        rotation="0 0 0"
+        width="30"
+        height="5"
+        color="#1976D2"
+        material="side: double">
+      </a-plane>
+
+      <!-- Left wall -->
+      <a-plane
+        position="-15 2.5 0"
+        rotation="0 90 0"
+        width="30"
+        height="5"
+        color="#1565C0"
+        material="side: double">
+      </a-plane>
+
+      <!-- Right wall -->
+      <a-plane
+        position="15 2.5 0"
+        rotation="0 -90 0"
+        width="30"
+        height="5"
+        color="#1565C0"
+        material="side: double">
+      </a-plane>
+
+      <!-- Room Title -->
       <a-entity
-        position="0 2.5 -4"
+        position="0 3.5 -14.5"
         vietnamese-text="
-          value: Phòng 1: 1911-1919\nKhởi hành\n\nNhấp vào 3 hiện vật để tiếp tục;
+          value: Phòng 1: 1911-1919\nKHỞI HÀNH\n\nKhám phá 3 hiện vật để mở khóa cửa;
           color: #FFFFFF;
-          fontSize: 0.3;
+          fontSize: 0.35;
           align: center;
-          width: 6;
+          width: 8;
         ">
       </a-entity>
 
-      <!-- Interactive Object 1: Tàu Ba Son (Ship) -->
-      <a-entity position="0 1 -6">
-        <!-- Visible object -->
-        <a-cylinder
-          radius="0.5"
-          height="2"
-          color="#C62828"
+      <!-- Room-specific Lighting -->
+      <a-entity
+        light="
+          type: ambient;
+          color: #E3F2FD;
+          intensity: 0.5;
+        ">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: directional;
+          color: #1976D2;
+          intensity: 0.9;
+          castShadow: true;
+        "
+        position="8 12 4">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: hemisphere;
+          color: #2196F3;
+          groundColor: #0D47A1;
+          intensity: 0.6;
+        ">
+      </a-entity>
+
+      <!-- Environmental Props -->
+      <!-- Decorative ship in background (non-interactive) -->
+      <a-box
+        position="-8 1 -12"
+        width="3"
+        height="2"
+        depth="6"
+        color="#8D6E63"
+        shadow="cast: true"
+        material="roughness: 0.9">
+      </a-box>
+
+      <!-- Harbor barrels -->
+      <a-cylinder
+        position="6 0.5 -10"
+        radius="0.5"
+        height="1"
+        color="#795548"
+        shadow="cast: true">
+      </a-cylinder>
+      <a-cylinder
+        position="7 0.5 -10"
+        radius="0.5"
+        height="1"
+        color="#795548"
+        shadow="cast: true">
+      </a-cylinder>
+
+      <!-- Rope coils -->
+      <a-torus
+        position="-6 0.3 -9"
+        radius="0.5"
+        radius-tubular="0.1"
+        color="#A1887F"
+        rotation="-90 0 0"
+        shadow="cast: true">
+      </a-torus>
+
+      <!-- ============================================ -->
+      <!-- INTERACTIVE OBJECTS (Room 1) -->
+      <!-- ============================================ -->
+
+      <!-- Interactive Object 1: Chiếc vali cũ (Suitcase) -->
+      <a-entity position="-3 0 -6">
+        <!-- 3D Model -->
+        <a-entity
+          gltf-model="#model-suitcase"
+          scale="1.2 1.2 1.2"
+          rotation="0 45 0"
           shadow="cast: true"
           class="interactive"
           interactive-object="
-            objectId: obj-room1-ship;
-            title: Tàu Ba Son;
-            description: Ngày 5/6/1911, Nguyễn Ái Quốc rời cảng Sài Gòn trên tàu Amiral Latouche-Tréville với tư cách thợ phụ bếp, bắt đầu cuộc hành trình 30 năm đi tìm con đường cứu nước.\n\n'Tôi muốn đi ra nước ngoài để xem các nước khác họ làm thế nào, rồi về giúp đồng bào mình.';
+            objectId: obj-room1-suitcase;
+            title: Chiếc vali cũ - Khởi đầu hành trình;
+            description: Ngày 5 tháng 6 năm 1911, thanh niên Nguyễn Tất Thành - người sau này được biết đến với tên gọi Nguyễn Ái Quốc và Hồ Chí Minh - bước lên con tàu Amiral Latouche-Tréville tại cảng Nhà Rồng, Sài Gòn. Với chiếc vali nhỏ chứa vài bộ quần áo và tấm lòng quyết tâm cứu nước, chàng thanh niên trẻ tuổi bắt đầu cuộc hành trình 30 năm đi tìm đường cứu nước.\n\nTrở thành thợ phụ bếp trên tàu, người đã có cơ hội đến nhiều nơi trên thế giới. Từ các cảng biển châu Phi đến châu Âu, từ Bắc Mỹ đến châu Á, người quan sát đời sống của các dân tộc bị áp bức, học hỏi kinh nghiệm đấu tranh của họ.\n\n'Tôi muốn đi ra nước ngoài để xem các nước khác họ làm thế nào, rồi về giúp đồng bào mình. Đó là ý định duy nhất của tôi.' - Hồ Chí Minh;
             image: ;
             highlightColor: #FFD700;
-            highlightIntensity: 1.5;
+            highlightIntensity: 2.0;
           ">
+        </a-entity>
+
+        <!-- Pedestal -->
+        <a-cylinder
+          position="0 -0.3 0"
+          radius="0.8"
+          height="0.6"
+          color="#8D6E63"
+          shadow="cast: true">
         </a-cylinder>
-        <!-- Invisible larger collision box for easier clicking -->
+
+        <!-- Clickable collision box -->
         <a-box
           class="clickable"
-          width="2"
-          height="3"
-          depth="2"
+          width="2.5"
+          height="2"
+          depth="2.5"
           opacity="0"
           material="transparent: true; visible: false"
-          data-interactive-target="obj-room1-ship"
+          data-interactive-target="obj-room1-suitcase"
           click-forwarder>
         </a-box>
       </a-entity>
 
-      <!-- Interactive Object 2: Bản đồ (World Map) -->
-      <a-entity position="2.5 1.5 -6">
-        <!-- Visible object -->
-        <a-torus
-          radius="0.8"
-          radius-tubular="0.2"
-          color="#FFD700"
+      <!-- Interactive Object 2: Bản đồ thế giới (World Map) -->
+      <a-entity position="0 1.5 -8">
+        <!-- 3D Model -->
+        <a-entity
+          gltf-model="#model-map"
+          scale="1.5 1.5 1.5"
+          rotation="0 0 0"
           shadow="cast: true"
           class="interactive"
           interactive-object="
             objectId: obj-room1-map;
-            title: Bản đồ thế giới;
-            description: Từ 1911-1919, Nguyễn Ái Quốc đã đi qua nhiều nước: Pháp, Anh, Mỹ, Phi châu... Người quan sát cuộc sống của người dân bị áp bức ở các thuộc địa, tìm hiểu phong trào đấu tranh giải phóng dân tộc.\n\n'Tôi đã đi khắp năm châu để nghiên cứu, để học hỏi.';
+            title: Hành trình năm châu - Con đường tìm chân lý;
+            description: Từ năm 1911 đến 1919, Nguyễn Ái Quốc đã đi qua 30 quốc gia trên 5 châu lục. Từ Pháp, Anh, Mỹ, qua các nước châu Phi, người đã mở rộng tầm nhìn và hiểu biết về thế giới.\n\nỞ Pháp, người chứng kiến nền dân chủ tư sản và sự bất bình đẳng. Ở Anh, người thấy sức mạnh của phong trào công nhân. Ở Mỹ, người học được tinh thần tự do và độc lập. Ở châu Phi, người cảm nhận nỗi đau của các dân tộc thuộc địa.\n\nMỗi chặng đường là một bài học. Người quan sát, học hỏi, suy ngẫm về con đường giải phóng dân tộc. Người tìm hiểu các phong trào cách mạng, đọc sách báo tiến bộ, tiếp xúc với những người yêu nước và cách mạng.\n\n'Tôi đã đi khắp năm châu để nghiên cứu, để học hỏi. Mỗi nơi tôi đến, tôi đều tìm hiểu xem dân tộc ấy đấu tranh như thế nào.' - Hồ Chí Minh;
             image: ;
             highlightColor: #FFD700;
-            highlightIntensity: 1.5;
+            highlightIntensity: 2.0;
           ">
-        </a-torus>
-        <!-- Invisible larger collision box for easier clicking -->
+        </a-entity>
+
+        <!-- Ambient glow effect -->
+        <a-entity
+          light="
+            type: point;
+            color: #64B5F6;
+            intensity: 0.5;
+            distance: 5;
+          "
+          position="0 0 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
         <a-box
           class="clickable"
-          width="2.5"
-          height="2.5"
-          depth="2.5"
+          width="3"
+          height="3"
+          depth="2"
           opacity="0"
           material="transparent: true; visible: false"
           data-interactive-target="obj-room1-map"
@@ -263,72 +447,87 @@
         </a-box>
       </a-entity>
 
-      <!-- Interactive Object 3: Nhật ký (Diary) -->
-      <a-entity position="-2.5 1 -6">
-        <!-- Visible object -->
-        <a-cone
-          radius-bottom="0.8"
-          radius-top="0"
-          height="2"
-          color="#4ECDC4"
+      <!-- Interactive Object 3: Bản yêu sách 8 điểm (Versailles Petition) -->
+      <a-entity position="3 1 -6">
+        <!-- 3D Model -->
+        <a-entity
+          gltf-model="#model-paper"
+          scale="2 2 2"
+          rotation="0 -30 0"
           shadow="cast: true"
           class="interactive"
           interactive-object="
-            objectId: obj-room1-diary;
-            title: Nhật ký hành trình;
-            description: Tại Hội nghị Versailles năm 1919, Nguyễn Ái Quốc đã nộp 'Bản yêu sách 8 điểm' đòi quyền tự do, dân chủ cho nhân dân Việt Nam. Đây là lần đầu tiên tiếng nói của người Việt được vang lên tại một diễn đàn quốc tế.\n\n'Tôi muốn tìm một con đường mới để cứu dân tộc.';
+            objectId: obj-room1-petition;
+            title: Bản yêu sách 8 điểm - Tiếng nói Versailles;
+            description: Tháng 6 năm 1919, tại Hội nghị Versailles (Pháp), Nguyễn Ái Quốc đã nộp 'Bản yêu sách 8 điểm' lên Hội nghị Hòa bình, đòi quyền tự do, dân chủ cho nhân dân Đông Dương.\n\nĐây là lần đầu tiên tiếng nói của người Việt Nam được vang lên tại một diễn đàn quốc tế. Dù bản yêu sách không được các cường quốc chấp nhận, nhưng nó đã gây tiếng vang lớn trong dư luận quốc tế và đánh thức tinh thần dân tộc ở Việt Nam.\n\nTám điểm chính:\n1. Ân xá tổng quát cho tù chính trị bản xứ\n2. Cải cách chế độ tư pháp Đông Dương\n3. Tự do báo chí và tự do ngôn luận\n4. Tự do hội họp và lập hội\n5. Tự do định cư và tự do đi lại\n6. Quyền được học hành\n7. Thay thế chế độ Sắc lệnh bằng chế độ Pháp luật\n8. Cử đại biểu bản xứ vào Quốc hội Pháp\n\n'Tôi muốn tìm một con đường mới để cứu dân tộc. Đó là con đường cách mạng.' - Hồ Chí Minh;
             image: ;
             highlightColor: #FFD700;
-            highlightIntensity: 1.5;
+            highlightIntensity: 2.0;
           ">
-        </a-cone>
-        <!-- Invisible larger collision box for easier clicking -->
+        </a-entity>
+
+        <!-- Display stand -->
+        <a-box
+          position="0 -0.5 0"
+          width="1"
+          height="1"
+          depth="1"
+          color="#A1887F"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Clickable collision box -->
         <a-box
           class="clickable"
           width="2.5"
-          height="3"
+          height="2.5"
           depth="2.5"
           opacity="0"
           material="transparent: true; visible: false"
-          data-interactive-target="obj-room1-diary"
+          data-interactive-target="obj-room1-petition"
           click-forwarder>
         </a-box>
       </a-entity>
 
+      <!-- ============================================ -->
+      <!-- DOORS (Room 1) -->
+      <!-- ============================================ -->
+
       <!-- Door to Room 2 (locked initially) -->
       <a-entity
-        position="0 0 -12"
+        position="0 0 -14"
         door-portal="
-          targetRoom: home;
+          targetRoom: room2;
           locked: true;
-          activationDistance: 3;
+          activationDistance: 3.5;
         ">
         <!-- Door frame -->
         <a-box
-          position="0 1 0"
-          width="2"
-          height="3"
-          depth="0.2"
-          color="#8B4513"
-          shadow="cast: true">
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#8D6E63"
+          shadow="cast: true"
+          material="roughness: 0.7">
         </a-box>
 
         <!-- Door label -->
         <a-entity
-          position="0 3.5 0.2"
+          position="0 4 0.3"
           vietnamese-text="
-            value: Phòng tiếp theo\n(Hoàn thành 3/3 hiện vật);
-            color: #FFFFFF;
+            value: Phòng 2: Ánh sáng Lênin\n1920-1923\n(Khám phá 3/3 hiện vật để mở khóa);
+            color: #FFEB3B;
             fontSize: 0.2;
             align: center;
-            width: 3;
+            width: 4;
           ">
         </a-entity>
       </a-entity>
 
       <!-- Door back to Home -->
       <a-entity
-        position="0 0 5"
+        position="0 0 8"
         rotation="0 180 0"
         door-portal="
           targetRoom: home;
@@ -337,23 +536,1751 @@
         ">
         <!-- Door frame -->
         <a-box
-          position="0 1 0"
-          width="2"
-          height="3"
-          depth="0.2"
-          color="#8B4513"
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#8D6E63"
           shadow="cast: true">
         </a-box>
 
         <!-- Door label -->
         <a-entity
-          position="0 3.5 0.2"
+          position="0 4 0.3"
           vietnamese-text="
-            value: Trở về Home;
+            value: Quay về Sảnh chính;
             color: #FFFFFF;
+            fontSize: 0.25;
+            align: center;
+            width: 3;
+          ">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+    <!-- ============================================ -->
+    <!-- ROOM 2 (1920-1923: Ánh sáng Lênin) -->
+    <!-- Library Theme - Indigo/Purple palette -->
+    <!-- ============================================ -->
+    <a-entity id="room2" visible="false">
+
+      <!-- Progress Tracker for Room 2 -->
+      <a-entity
+        progress-tracker="
+          roomId: room2;
+          requiredObjects: 3;
+          objects: obj-room2-lenin, obj-room2-newspaper, obj-room2-photo;
+          enablePersistence: true;
+          autoUnlockDoor: true;
+        ">
+      </a-entity>
+
+      <!-- Sky (Library dark blue) -->
+      <a-sky color="#283593"></a-sky>
+
+      <!-- Ground Plane (Dark wood parquet) -->
+      <a-plane
+        ground
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="50"
+        height="50"
+        color="#3E2723"
+        shadow="receive: true"
+        material="roughness: 0.6; metalness: 0.1">
+      </a-plane>
+
+      <!-- Room Walls (Library setting) -->
+      <!-- Back wall -->
+      <a-plane
+        position="0 2.5 -15"
+        rotation="0 0 0"
+        width="30"
+        height="5"
+        color="#1A237E"
+        material="side: double">
+      </a-plane>
+
+      <!-- Left wall with bookshelves -->
+      <a-plane
+        position="-15 2.5 0"
+        rotation="0 90 0"
+        width="30"
+        height="5"
+        color="#311B92"
+        material="side: double">
+      </a-plane>
+
+      <!-- Right wall with bookshelves -->
+      <a-plane
+        position="15 2.5 0"
+        rotation="0 -90 0"
+        width="30"
+        height="5"
+        color="#311B92"
+        material="side: double">
+      </a-plane>
+
+      <!-- Room Title -->
+      <a-entity
+        position="0 3.5 -14.5"
+        vietnamese-text="
+          value: Phòng 2: 1920-1923\nÁNH SÁNG LÊNIN\n\nKhám phá 3 hiện vật để tiếp tục hành trình;
+          color: #FFD54F;
+          fontSize: 0.35;
+          align: center;
+          width: 8;
+        ">
+      </a-entity>
+
+      <!-- Room-specific Lighting (Dramatic library atmosphere) -->
+      <a-entity
+        light="
+          type: ambient;
+          color: #C5CAE9;
+          intensity: 0.4;
+        ">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: directional;
+          color: #FFF9E6;
+          intensity: 0.7;
+          castShadow: true;
+        "
+        position="3 8 3">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: hemisphere;
+          color: #5C6BC0;
+          groundColor: #283593;
+          intensity: 0.4;
+        ">
+      </a-entity>
+
+      <!-- Special spotlight for Lenin document -->
+      <a-entity
+        light="
+          type: spot;
+          color: #FFD54F;
+          intensity: 1.2;
+          angle: 30;
+          penumbra: 0.3;
+          castShadow: true;
+        "
+        position="0 5 -8"
+        rotation="-90 0 0">
+      </a-entity>
+
+      <!-- Environmental Props (Library decoration) -->
+      <!-- Bookshelf left -->
+      <a-box
+        position="-12 2 -10"
+        width="2"
+        height="4"
+        depth="8"
+        color="#4E342E"
+        shadow="cast: true">
+      </a-box>
+
+      <!-- Bookshelf right -->
+      <a-box
+        position="12 2 -10"
+        width="2"
+        height="4"
+        depth="8"
+        color="#4E342E"
+        shadow="cast: true">
+      </a-box>
+
+      <!-- Reading table -->
+      <a-box
+        position="5 0.8 -5"
+        width="2"
+        height="0.1"
+        depth="1.5"
+        color="#6D4C41"
+        shadow="cast: true">
+      </a-box>
+
+      <!-- Table legs -->
+      <a-cylinder
+        position="4.6 0.4 -4.6"
+        radius="0.05"
+        height="0.8"
+        color="#3E2723">
+      </a-cylinder>
+      <a-cylinder
+        position="5.4 0.4 -4.6"
+        radius="0.05"
+        height="0.8"
+        color="#3E2723">
+      </a-cylinder>
+
+      <!-- Old lamp on table -->
+      <a-cone
+        position="5 1.2 -5"
+        radius-bottom="0.2"
+        radius-top="0.3"
+        height="0.4"
+        color="#FFD54F"
+        material="emissive: #FFD54F; emissiveIntensity: 0.5">
+      </a-cone>
+
+      <!-- Stained glass window effect (decorative) -->
+      <a-plane
+        position="0 3 -14.8"
+        width="4"
+        height="2.5"
+        color="#7E57C2"
+        material="opacity: 0.6; transparent: true; emissive: #9575CD; emissiveIntensity: 0.3">
+      </a-plane>
+
+      <!-- ============================================ -->
+      <!-- INTERACTIVE OBJECTS (Room 2) -->
+      <!-- ============================================ -->
+
+      <!-- Interactive Object 1: Lenin's Document (Featured centerpiece) -->
+      <a-entity position="0 1.5 -8">
+        <!-- 3D Model -->
+        <a-entity
+          gltf-model="#model-lenin-book"
+          scale="1.8 1.8 1.8"
+          rotation="0 0 0"
+          shadow="cast: true"
+          class="interactive"
+          animation__idle="property: rotation; to: 0 360 0; loop: true; dur: 60000; easing: linear"
+          interactive-object="
+            objectId: obj-room2-lenin;
+            title: Luận cương về vấn đề dân tộc và thuộc địa - Ánh sáng chỉ đường;
+            description: Năm 1920, tại Paris, Nguyễn Ái Quốc đọc được 'Sơ thảo lần thứ nhất những luận cương về vấn đề dân tộc và thuộc địa' của V.I. Lênin. Đây là khoảnh khắc bước ngoặt trong cuộc đời người.\n\nTrước đó, người đã tìm kiếm con đường cứu nước qua nhiều khuynh hướng: cải lương, duy tân, đề nghị với thực dân Pháp... Nhưng đều thất bại. Lênin chỉ ra rằng: Muốn giải phóng dân tộc, phải lật đổ chế độ thực dân, phải cách mạng triệt để.\n\n'Lúc ấy, tôi còn chưa hiểu được tất cả tầm quan trọng của luận cương ấy. Nhưng qua những lời lẽ nồng nhiệt, tôi cảm thấy rất phấn khởi, sáng tỏ, tin tưởng biết bao! Tôi vui mừng đến phát khóc lên. Ngồi một mình trong buồng mà tôi nói to lên, như đang nói trước quần chúng đông đảo: 'Hỡi đồng bào bị đọa đày đau khổ! Đây là cái cần thiết cho chúng ta, đây là con đường giải phóng chúng ta!'\n\nTừ đó, tôi hoàn toàn tin theo Lênin, tin theo Quốc tế thứ ba.' - Hồ Chí Minh (Đường Kách mệnh);
+            image: ;
+            highlightColor: #FFD54F;
+            highlightIntensity: 2.5;
+          ">
+        </a-entity>
+
+        <!-- Special pedestal with glow -->
+        <a-cylinder
+          position="0 -0.5 0"
+          radius="1"
+          height="1"
+          color="#5C6BC0"
+          shadow="cast: true"
+          material="emissive: #7E57C2; emissiveIntensity: 0.3">
+        </a-cylinder>
+
+        <!-- Ambient glow particles -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFD54F;
+            intensity: 0.8;
+            distance: 8;
+          "
+          position="0 0 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="3"
+          height="3"
+          depth="3"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room2-lenin"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Interactive Object 2: Le Paria Newspaper -->
+      <a-entity position="-6 1.8 -12">
+        <!-- 3D Model (wall-mounted frame) -->
+        <a-entity
+          gltf-model="#model-newspaper"
+          scale="0.8 0.8 0.8"
+          rotation="0 30 0"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room2-newspaper;
+            title: Báo Le Paria (Người Cùng Khổ) - Vũ khí tuyên truyền đầu tiên;
+            description: Tháng 4 năm 1922, Nguyễn Ái Quốc cùng các đồng chí sáng lập tờ báo 'Le Paria' (Người Cùng Khổ) - cơ quan ngôn luận của Hội Liên hiệp các dân tộc thuộc địa.\n\nĐây là vũ khí tuyên truyền đầu tiên của Nguyễn Ái Quốc, phơi bày tội ác của chủ nghĩa thực dân Pháp, cổ động cho phong trào đấu tranh giải phóng dân tộc. Báo được xuất bản bằng tiếng Pháp, phát hành rộng rãi trong giới công nhân và trí thức tiến bộ.\n\nTrên báo, Nguyễn Ái Quốc viết nhiều bài với giọng văn sắc bén, châm biếm, kết án chủ nghĩa đế quốc. Người cũng giới thiệu tình hình đấu tranh của nhân dân các nước thuộc địa, tạo sự đoàn kết quốc tế.\n\nKhẩu hiệu của báo: 'Vô sản các nước và các dân tộc thuộc địa đoàn kết lại!'\n\n'Báo chí là vũ khí sắc bén nhất của cách mạng.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FFD700;
+            highlightIntensity: 2.0;
+          ">
+        </a-entity>
+
+        <!-- Wall mount bracket -->
+        <a-box
+          position="0 0 0.3"
+          width="1.5"
+          height="2"
+          depth="0.1"
+          color="#6D4C41"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="2.5"
+          height="3"
+          depth="1"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room2-newspaper"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Interactive Object 3: Group Photo -->
+      <a-entity position="6 1.8 -12">
+        <!-- 3D Model (framed photo) -->
+        <a-entity
+          gltf-model="#model-photo-frame"
+          scale="0.6 0.6 0.6"
+          rotation="0 -30 0"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room2-photo;
+            title: Hội Liên hiệp các dân tộc thuộc địa - Đoàn kết quốc tế;
+            description: Tháng 7 năm 1921, tại Đại hội lần thứ nhất của Quốc tế Cộng sản tại Matxcơva, Nguyễn Ái Quốc được bầu vào Ủy ban thường trực Hội Liên hiệp các dân tộc thuộc địa.\n\nĐây là tổ chức quốc tế do Quốc tế Cộng sản thành lập nhằm đoàn kết các dân tộc bị áp bức, đấu tranh chống chủ nghĩa đế quốc. Nguyễn Ái Quốc đại diện cho nhân dân Đông Dương (Việt Nam, Lào, Campuchia).\n\nTại đây, người gặp gỡ các nhà cách mạng từ Trung Quốc, Ấn Độ, Triều Tiên, Algeria, Tunisia... Học hỏi kinh nghiệm đấu tranh, trao đổi chiến lược giải phóng dân tộc.\n\nNgười viết: 'Đây không phải là cuộc đấu tranh của một dân tộc. Đây là cuộc đấu tranh chung của các dân tộc bị áp bức trên toàn thế giới chống lại chủ nghĩa đế quốc.'\n\n'Không có gì quý hơn độc lập, tự do.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FFD700;
+            highlightIntensity: 2.0;
+          ">
+        </a-entity>
+
+        <!-- Wall mount -->
+        <a-box
+          position="0 0 0.3"
+          width="1.2"
+          height="1.5"
+          depth="0.1"
+          color="#6D4C41"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="2"
+          height="2.5"
+          depth="1"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room2-photo"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- ============================================ -->
+      <!-- DOORS (Room 2) -->
+      <!-- ============================================ -->
+
+      <!-- Door to Room 3 (locked initially) -->
+      <a-entity
+        position="0 0 -14"
+        door-portal="
+          targetRoom: room3;
+          locked: true;
+          activationDistance: 3.5;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#4E342E"
+          shadow="cast: true"
+          material="roughness: 0.7">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Phòng 3: Quảng Châu\n1924-1927\n(Đang phát triển);
+            color: #FFB74D;
             fontSize: 0.2;
             align: center;
+            width: 4;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Door back to Room 1 -->
+      <a-entity
+        position="0 0 8"
+        rotation="0 180 0"
+        door-portal="
+          targetRoom: room1;
+          locked: false;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#4E342E"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Quay về Phòng 1: Khởi hành;
+            color: #FFFFFF;
+            fontSize: 0.25;
+            align: center;
+            width: 4;
+          ">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+    <!-- ============================================ -->
+    <!-- ROOM 3 (1924-1927: Quảng Châu) -->
+    <!-- Classroom/Training Theme - Orange/Warm palette -->
+    <!-- ============================================ -->
+    <a-entity id="room3" visible="false">
+
+      <!-- Progress Tracker for Room 3 -->
+      <a-entity
+        progress-tracker="
+          roomId: room3;
+          requiredObjects: 3;
+          objects: obj-room3-book, obj-room3-blackboard, obj-room3-youth;
+          enablePersistence: true;
+          autoUnlockDoor: true;
+        ">
+      </a-entity>
+
+      <!-- Sky (Warm sunset) -->
+      <a-sky color="#EF6C00"></a-sky>
+
+      <!-- Ground Plane (Wooden classroom floor) -->
+      <a-plane
+        ground
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="50"
+        height="50"
+        color="#8D6E63"
+        shadow="receive: true"
+        material="roughness: 0.7">
+      </a-plane>
+
+      <!-- Room Walls (Classroom setting) -->
+      <!-- Back wall with blackboard -->
+      <a-plane
+        position="0 2.5 -15"
+        rotation="0 0 0"
+        width="30"
+        height="5"
+        color="#E65100"
+        material="side: double">
+      </a-plane>
+
+      <!-- Left wall -->
+      <a-plane
+        position="-15 2.5 0"
+        rotation="0 90 0"
+        width="30"
+        height="5"
+        color="#D84315"
+        material="side: double">
+      </a-plane>
+
+      <!-- Right wall -->
+      <a-plane
+        position="15 2.5 0"
+        rotation="0 -90 0"
+        width="30"
+        height="5"
+        color="#D84315"
+        material="side: double">
+      </a-plane>
+
+      <!-- Room Title -->
+      <a-entity
+        position="0 3.5 -14.5"
+        vietnamese-text="
+          value: Phòng 3: 1924-1927\nQUẢNG CHÂU - TRUNG TÂM ĐÀO TẠO\n\nKhám phá 3 hiện vật để tiếp tục;
+          color: #FFFFFF;
+          fontSize: 0.35;
+          align: center;
+          width: 10;
+        ">
+      </a-entity>
+
+      <!-- Room-specific Lighting (Warm classroom atmosphere) -->
+      <a-entity
+        light="
+          type: ambient;
+          color: #FFE0B2;
+          intensity: 0.5;
+        ">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: directional;
+          color: #FFB74D;
+          intensity: 0.8;
+          castShadow: true;
+        "
+        position="8 10 4">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: hemisphere;
+          color: #FB8C00;
+          groundColor: #BF360C;
+          intensity: 0.5;
+        ">
+      </a-entity>
+
+      <!-- Environmental Props (Classroom decoration) -->
+      <!-- Teacher's desk -->
+      <a-box
+        position="0 0.8 -12"
+        width="2.5"
+        height="0.15"
+        depth="1.2"
+        color="#5D4037"
+        shadow="cast: true">
+      </a-box>
+
+      <!-- Desk legs -->
+      <a-box position="-1 0.4 -11.5" width="0.1" height="0.8" depth="0.1" color="#3E2723"></a-box>
+      <a-box position="1 0.4 -11.5" width="0.1" height="0.8" depth="0.1" color="#3E2723"></a-box>
+      <a-box position="-1 0.4 -12.5" width="0.1" height="0.8" depth="0.1" color="#3E2723"></a-box>
+      <a-box position="1 0.4 -12.5" width="0.1" height="0.8" depth="0.1" color="#3E2723"></a-box>
+
+      <!-- Student desks (rows) -->
+      <a-box position="-4 0.6 -6" width="1.5" height="0.1" depth="1" color="#6D4C41" shadow="cast: true"></a-box>
+      <a-box position="0 0.6 -6" width="1.5" height="0.1" depth="1" color="#6D4C41" shadow="cast: true"></a-box>
+      <a-box position="4 0.6 -6" width="1.5" height="0.1" depth="1" color="#6D4C41" shadow="cast: true"></a-box>
+
+      <a-box position="-4 0.6 -4" width="1.5" height="0.1" depth="1" color="#6D4C41" shadow="cast: true"></a-box>
+      <a-box position="0 0.6 -4" width="1.5" height="0.1" depth="1" color="#6D4C41" shadow="cast: true"></a-box>
+      <a-box position="4 0.6 -4" width="1.5" height="0.1" depth="1" color="#6D4C41" shadow="cast: true"></a-box>
+
+      <!-- Chairs (simple cylinders) -->
+      <a-cylinder position="-4 0.3 -6" radius="0.25" height="0.6" color="#795548"></a-cylinder>
+      <a-cylinder position="0 0.3 -6" radius="0.25" height="0.6" color="#795548"></a-cylinder>
+      <a-cylinder position="4 0.3 -6" radius="0.25" height="0.6" color="#795548"></a-cylinder>
+
+      <!-- Blackboard (large plane on back wall) -->
+      <a-plane
+        position="0 2 -14.8"
+        width="6"
+        height="3"
+        color="#1B5E20"
+        material="roughness: 0.9">
+      </a-plane>
+
+      <!-- Window frames (decorative) -->
+      <a-box position="-12 2.5 -8" width="0.2" height="2.5" depth="2" color="#FFE082" material="emissive: #FFE082; emissiveIntensity: 0.3"></a-box>
+      <a-box position="-12 2.5 -4" width="0.2" height="2.5" depth="2" color="#FFE082" material="emissive: #FFE082; emissiveIntensity: 0.3"></a-box>
+
+      <!-- ============================================ -->
+      <!-- INTERACTIVE OBJECTS (Room 3) -->
+      <!-- ============================================ -->
+
+      <!-- Interactive Object 1: "Đường Kách mệnh" book -->
+      <a-entity position="-0.5 0.9 -12">
+        <!-- Placeholder model (box for now) -->
+        <a-box
+          width="0.4"
+          height="0.05"
+          depth="0.6"
+          color="#C62828"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room3-book;
+            title: Đường Kách mệnh - Con đường cách mạng;
+            description: Năm 1927, tại Quảng Châu (Canton), Nguyễn Ái Quốc viết cuốn sách 'Đường Kách mệnh' (Con đường Cách mạng) bằng tiếng Trung Quốc để giáo dục thanh niên yêu nước Việt Nam.\n\nCuốn sách giải thích rõ ràng: Cách mạng là gì? Tại sao phải cách mạng? Cách mạng như thế nào? Đây là giáo trình cơ bản cho các lớp đào tạo cán bộ cách mạng.\n\nNội dung chính:\n- Phân tích tình hình Việt Nam dưới ách đô hộ\n- Giải thích chủ nghĩa đế quốc và chủ nghĩa tư bản\n- Hướng dẫn tổ chức và hoạt động cách mạng\n- Vai trò của giai cấp công nhân và nông dân\n- Ý nghĩa của đoàn kết quốc tế\n\n'Cách mạng là việc chung của toàn dân, không phải riêng ai. Muốn làm cách mạng phải có tổ chức chặt chẽ, có kỷ luật nghiêm minh.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FFD700;
+            highlightIntensity: 2.0;
+          ">
+        </a-box>
+
+        <!-- Book glow effect -->
+        <a-entity
+          light="
+            type: point;
+            color: #FF5252;
+            intensity: 0.5;
+            distance: 3;
+          "
+          position="0 0.2 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="1"
+          height="0.5"
+          depth="1"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room3-book"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Interactive Object 2: Organizational diagram on blackboard -->
+      <a-entity position="0 2 -14.7">
+        <!-- Diagram (simple text representation) -->
+        <a-entity
+          vietnamese-text="
+            value: HỘI VIỆT NAM CÁCH MẠNG\nTHANH NIÊN\n\n[Sơ đồ tổ chức]\n\nBan lãnh đạo\n|\nCác chi bộ\n|\nThanh niên yêu nước;
+            color: #FFFFFF;
+            fontSize: 0.15;
+            align: center;
+            width: 4;
+          "
+          class="interactive"
+          interactive-object="
+            objectId: obj-room3-blackboard;
+            title: Hội Việt Nam Cách mạng Thanh niên - Tổ chức tiền thân;
+            description: Tháng 6 năm 1925, tại Quảng Châu, Nguyễn Ái Quốc thành lập 'Hội Việt Nam Cách mạng Thanh niên' - tổ chức cách mạng đầu tiên của Việt Nam theo khuynh hướng Mác-Lênin.\n\nĐây là tổ chức tiền thân của Đảng Cộng sản Việt Nam. Hội có nhiệm vụ:\n- Tập hợp thanh niên yêu nước\n- Tuyên truyền tư tưởng cách mạng\n- Đào tạo cán bộ cách mạng\n- Chuẩn bị lực lượng cho cuộc đấu tranh lâu dài\n\nTrung tâm đào tạo ở Quảng Châu đã đào tạo hơn 200 học viên người Việt Nam. Các học viên học về chủ nghĩa Mác-Lênin, lịch sử cách mạng thế giới, phương pháp tuyên truyền và tổ chức quần chúng.\n\nNhiều học viên sau này trở thành lãnh đạo của Đảng và cách mạng Việt Nam: Lê Hồng Phong, Phạm Văn Đồng, Võ Nguyên Giáp...\n\n'Thanh niên là chủ nhân tương lai của đất nước. Phải giáo dục họ thành những chiến sĩ cách mạng chân chính.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FFEB3B;
+            highlightIntensity: 2.5;
+          ">
+        </a-entity>
+
+        <!-- Blackboard frame highlight -->
+        <a-ring
+          position="0 0 -0.05"
+          radius-inner="2.8"
+          radius-outer="3"
+          color="#FFD700"
+          material="opacity: 0; transparent: true"
+          id="blackboard-highlight">
+        </a-ring>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="6"
+          height="3"
+          depth="0.2"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room3-blackboard"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Interactive Object 3: Training youth representation -->
+      <a-entity position="3 1 -10">
+        <!-- Symbolic representation (podium with light) -->
+        <a-cylinder
+          position="0 0.5 0"
+          radius="0.4"
+          height="1"
+          color="#D32F2F"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room3-youth;
+            title: Đào tạo cán bộ cách mạng - Gieo mầm tương lai;
+            description: Từ năm 1924 đến 1927, tại Trung tâm đào tạo Quảng Châu, Nguyễn Ái Quốc trực tiếp giảng dạy cho hàng trăm thanh niên Việt Nam.\n\nĐây là thời kỳ quan trọng trong việc xây dựng đội ngũ cán bộ cách mạng cho Việt Nam. Các học viên được học:\n\n**Lý luận cách mạng:**\n- Chủ nghĩa Mác-Lênin cơ bản\n- Vấn đề dân tộc và thuộc địa\n- Chiến lược và sách lược cách mạng\n\n**Kỹ năng thực tiễn:**\n- Tuyên truyền vận động quần chúng\n- Tổ chức và lãnh đạo phong trào\n- Công tác bí mật và an toàn\n- Huấn luyện quân sự cơ bản\n\nNguyễn Ái Quốc không chỉ dạy lý thuyết mà còn truyền đạt kinh nghiệm thực tế, rèn luyện đạo đức cách mạng. Người nhấn mạnh: 'Cách mạng phải có đạo đức, có lòng yêu nước, yêu dân'.\n\nNhững học viên này về nước đã trở thành xương sống của phong trào cách mạng Việt Nam trong những năm 1930-1945.\n\n'Cán bộ là cái gốc của mọi công việc.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FF6E40;
+            highlightIntensity: 2.0;
+          ">
+        </a-cylinder>
+
+        <!-- Symbolic star on top -->
+        <a-cone
+          position="0 1.2 0"
+          radius-bottom="0.3"
+          height="0.4"
+          color="#FFD700"
+          material="emissive: #FFD700; emissiveIntensity: 0.8"
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 4000; easing: linear">
+        </a-cone>
+
+        <!-- Ambient glow -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFAB40;
+            intensity: 0.7;
+            distance: 4;
+          "
+          position="0 1 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="2"
+          height="2"
+          depth="2"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room3-youth"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- ============================================ -->
+      <!-- DOORS (Room 3) -->
+      <!-- ============================================ -->
+
+      <!-- Door to Room 4 (locked initially) -->
+      <a-entity
+        position="0 0 -14"
+        door-portal="
+          targetRoom: room4;
+          locked: true;
+          activationDistance: 3.5;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#5D4037"
+          shadow="cast: true"
+          material="roughness: 0.7">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Phòng 4: Hội nghị Hương Cảng\n1930\n(Khám phá 3/3 hiện vật để mở khóa);
+            color: #FF5252;
+            fontSize: 0.2;
+            align: center;
+            width: 5;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Door back to Room 2 -->
+      <a-entity
+        position="0 0 8"
+        rotation="0 180 0"
+        door-portal="
+          targetRoom: room2;
+          locked: false;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#5D4037"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Quay về Phòng 2: Ánh sáng Lênin;
+            color: #FFFFFF;
+            fontSize: 0.25;
+            align: center;
+            width: 5;
+          ">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+    <!-- ============================================ -->
+    <!-- ROOM 4 (1930: Hội nghị Hương Cảng) -->
+    <!-- Meeting Room Theme - Red/Dark Communist palette -->
+    <!-- SPECIAL EVENT: Flag Merger Animation -->
+    <!-- ============================================ -->
+    <a-entity id="room4" visible="false">
+
+      <!-- Progress Tracker for Room 4 -->
+      <a-entity
+        progress-tracker="
+          roomId: room4;
+          requiredObjects: 3;
+          objects: obj-room4-flag1, obj-room4-flag2, obj-room4-flag3;
+          enablePersistence: true;
+          autoUnlockDoor: true;
+        ">
+      </a-entity>
+
+      <!-- Flag Merger Event Handler -->
+      <a-entity
+        flag-merger-event="
+          roomId: room4;
+          enabled: true;
+          animationDuration: 3000;
+        ">
+      </a-entity>
+
+      <!-- Sky (Dark dramatic red) -->
+      <a-sky color="#B71C1C"></a-sky>
+
+      <!-- Ground Plane (Dark polished floor - meeting hall) -->
+      <a-plane
+        ground
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="50"
+        height="50"
+        color="#212121"
+        shadow="receive: true"
+        material="roughness: 0.3; metalness: 0.5">
+      </a-plane>
+
+      <!-- Room Walls (Dark meeting room) -->
+      <!-- Back wall -->
+      <a-plane
+        position="0 2.5 -15"
+        rotation="0 0 0"
+        width="30"
+        height="5"
+        color="#C62828"
+        material="side: double">
+      </a-plane>
+
+      <!-- Left wall -->
+      <a-plane
+        position="-15 2.5 0"
+        rotation="0 90 0"
+        width="30"
+        height="5"
+        color="#B71C1C"
+        material="side: double">
+      </a-plane>
+
+      <!-- Right wall -->
+      <a-plane
+        position="15 2.5 0"
+        rotation="0 -90 0"
+        width="30"
+        height="5"
+        color="#B71C1C"
+        material="side: double">
+      </a-plane>
+
+      <!-- Room Title -->
+      <a-entity
+        position="0 3.5 -14.5"
+        vietnamese-text="
+          value: Phòng 4: 1930\nHỘI NGHỊ HƯƠNG CẢNG\nThống nhất - Thành lập Đảng\n\nKhám phá 3 lá cờ để chứng kiến thời khắc lịch sử;
+          color: #FFD700;
+          fontSize: 0.3;
+          align: center;
+          width: 10;
+        ">
+      </a-entity>
+
+      <!-- Room-specific Lighting (Dramatic spotlight atmosphere) -->
+      <a-entity
+        light="
+          type: ambient;
+          color: #FFCDD2;
+          intensity: 0.3;
+        ">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: directional;
+          color: #EF5350;
+          intensity: 0.6;
+          castShadow: true;
+        "
+        position="0 10 0">
+      </a-entity>
+
+      <!-- Dramatic red hemisphere lighting -->
+      <a-entity
+        light="
+          type: hemisphere;
+          color: #F44336;
+          groundColor: #C62828;
+          intensity: 0.4;
+        ">
+      </a-entity>
+
+      <!-- Central spotlight on table -->
+      <a-entity
+        light="
+          type: spot;
+          color: #FFFFFF;
+          intensity: 1.5;
+          angle: 45;
+          penumbra: 0.4;
+          castShadow: true;
+        "
+        position="0 5 -8"
+        rotation="-90 0 0">
+      </a-entity>
+
+      <!-- Environmental Props (Meeting room) -->
+      <!-- Central meeting table (long rectangular) -->
+      <a-box
+        position="0 0.8 -8"
+        width="5"
+        height="0.1"
+        depth="2.5"
+        color="#3E2723"
+        shadow="cast: true"
+        material="roughness: 0.2; metalness: 0.3">
+      </a-box>
+
+      <!-- Table legs -->
+      <a-cylinder position="-2.2 0.4 -7" radius="0.08" height="0.8" color="#212121"></a-cylinder>
+      <a-cylinder position="2.2 0.4 -7" radius="0.08" height="0.8" color="#212121"></a-cylinder>
+      <a-cylinder position="-2.2 0.4 -9" radius="0.08" height="0.8" color="#212121"></a-cylinder>
+      <a-cylinder position="2.2 0.4 -9" radius="0.08" height="0.8" color="#212121"></a-cylinder>
+
+      <!-- Chairs around table -->
+      <a-box position="-1.5 0.5 -6.5" width="0.5" height="1" depth="0.5" color="#424242" shadow="cast: true"></a-box>
+      <a-box position="0 0.5 -6.5" width="0.5" height="1" depth="0.5" color="#424242" shadow="cast: true"></a-box>
+      <a-box position="1.5 0.5 -6.5" width="0.5" height="1" depth="0.5" color="#424242" shadow="cast: true"></a-box>
+
+      <a-box position="-1.5 0.5 -9.5" width="0.5" height="1" depth="0.5" color="#424242" shadow="cast: true"></a-box>
+      <a-box position="0 0.5 -9.5" width="0.5" height="1" depth="0.5" color="#424242" shadow="cast: true"></a-box>
+      <a-box position="1.5 0.5 -9.5" width="0.5" height="1" depth="0.5" color="#424242" shadow="cast: true"></a-box>
+
+      <!-- Decorative hammer and sickle symbol on back wall -->
+      <a-entity position="0 3 -14.8">
+        <!-- Hammer (vertical rectangle) -->
+        <a-box width="0.1" height="0.8" depth="0.05" color="#FFD700" material="emissive: #FFD700; emissiveIntensity: 0.8"></a-box>
+        <!-- Sickle (curved - approximated with rotated box) -->
+        <a-box position="0.3 0.2 0" rotation="0 0 -45" width="0.6" height="0.1" depth="0.05" color="#FFD700" material="emissive: #FFD700; emissiveIntensity: 0.8"></a-box>
+      </a-entity>
+
+      <!-- Red curtains (decorative) -->
+      <a-plane position="-10 2.5 -14.5" width="3" height="4" color="#C62828" material="side: double; opacity: 0.8; transparent: true"></a-plane>
+      <a-plane position="10 2.5 -14.5" width="3" height="4" color="#C62828" material="side: double; opacity: 0.8; transparent: true"></a-plane>
+
+      <!-- ============================================ -->
+      <!-- INTERACTIVE OBJECTS (Room 4) - 3 FLAGS -->
+      <!-- ============================================ -->
+
+      <!-- Interactive Object 1: Flag of Đông Dương Cộng sản Đảng (Indochina Communist Party) -->
+      <a-entity position="-3 1.5 -8" id="flag1-entity">
+        <!-- Flag pole -->
+        <a-cylinder
+          position="0 0.8 0"
+          radius="0.03"
+          height="1.6"
+          color="#8D6E63">
+        </a-cylinder>
+
+        <!-- Flag (red with yellow star - left group) -->
+        <a-plane
+          width="0.8"
+          height="0.6"
+          position="0.4 1.5 0"
+          color="#C62828"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room4-flag1;
+            title: Đông Dương Cộng sản Đảng - Nhóm đầu tiên;
+            description: Tháng 6 năm 1929, tại Hà Nội, Trịnh Đình Cửu cùng các đồng chí thành lập 'Đông Dương Cộng sản Đảng' - nhóm cộng sản đầu tiên ở miền Bắc Việt Nam.\n\nĐây là một trong ba tổ chức cộng sản xuất hiện vào cuối những năm 1920:\n1. Đông Dương Cộng sản Đảng (Hà Nội)\n2. An Nam Cộng sản Đảng (Trung Kỳ) \n3. Đông Dương Cộng sản Liên đoàn (Nam Kỳ)\n\nTuy cùng chung mục tiêu giải phóng dân tộc, nhưng ba tổ chức này hoạt động riêng rẽ, thiếu sự thống nhất về chính trị, tổ chức và hành động. Sự chia rẽ này làm suy yếu phong trào cách mạng.\n\nQuốc tế Cộng sản và Nguyễn Ái Quốc nhận thấy cần phải thống nhất các tổ chức này thành một đảng duy nhất để lãnh đạo cách mạng Việt Nam một cách hiệu quả.\n\n'Đoàn kết, đoàn kết, đại đoàn kết. Thành công, thành công, đại thành công.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FFEB3B;
+            highlightIntensity: 2.5;
+          ">
+          <!-- Star on flag -->
+          <a-cone
+            position="0 0 0.02"
+            radius-bottom="0.15"
+            height="0.02"
+            rotation="0 0 0"
+            color="#FFD700"
+            material="emissive: #FFD700; emissiveIntensity: 1.0">
+          </a-cone>
+        </a-plane>
+
+        <!-- Base pedestal -->
+        <a-cylinder
+          position="0 0.3 0"
+          radius="0.3"
+          height="0.6"
+          color="#616161">
+        </a-cylinder>
+
+        <!-- Glow effect -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFEB3B;
+            intensity: 0.6;
+            distance: 3;
+          "
+          position="0 1.5 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="1.5"
+          height="2"
+          depth="1.5"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room4-flag1"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Interactive Object 2: Flag of An Nam Cộng sản Đảng (Annam Communist Party) -->
+      <a-entity position="0 1.5 -8" id="flag2-entity">
+        <!-- Flag pole -->
+        <a-cylinder
+          position="0 0.8 0"
+          radius="0.03"
+          height="1.6"
+          color="#8D6E63">
+        </a-cylinder>
+
+        <!-- Flag (red with yellow star - center group) -->
+        <a-plane
+          width="0.8"
+          height="0.6"
+          position="0.4 1.5 0"
+          color="#D32F2F"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room4-flag2;
+            title: An Nam Cộng sản Đảng - Nhóm Trung Kỳ;
+            description: Đầu năm 1930, tại Trung Kỳ (miền Trung Việt Nam), các cán bộ cộng sản thành lập 'An Nam Cộng sản Đảng' - đại diện cho phong trào cách mạng ở khu vực này.\n\nNhóm này có cơ sở quần chúng mạnh ở các tỉnh Nghệ An, Hà Tĩnh và đã tổ chức nhiều cuộc đấu tranh của công nhân và nông dân chống chế độ thực dân.\n\nTuy nhiên, sự tồn tại đồng thời của ba tổ chức cộng sản riêng biệt tạo ra nhiều vấn đề:\n- Thiếu sự phối hợp trong hành động\n- Lãng phí nguồn lực và lực lượng\n- Tranh giành ảnh hưởng, thiếu đoàn kết\n- Khó khăn trong việc xây dựng đường lối thống nhất\n\nCả ba tổ chức đều nhận thức được vấn đề này và mong muốn thống nhất, nhưng cần có một người có uy tín và tầm nhìn để thực hiện công việc thống nhất này.\n\nNguyễn Ái Quốc, với kinh nghiệm quốc tế và vai trò đại diện Quốc tế Cộng sản, là người được tin tưởng để thực hiện nhiệm vụ lịch sử này.\n\n'Một cây làm chẳng nên non, ba cây chụm lại nên hòn núi cao.' - Ca dao Việt Nam;
+            image: ;
+            highlightColor: #FFEB3B;
+            highlightIntensity: 2.5;
+          ">
+          <!-- Star on flag -->
+          <a-cone
+            position="0 0 0.02"
+            radius-bottom="0.15"
+            height="0.02"
+            rotation="0 0 0"
+            color="#FFD700"
+            material="emissive: #FFD700; emissiveIntensity: 1.0">
+          </a-cone>
+        </a-plane>
+
+        <!-- Base pedestal -->
+        <a-cylinder
+          position="0 0.3 0"
+          radius="0.3"
+          height="0.6"
+          color="#616161">
+        </a-cylinder>
+
+        <!-- Glow effect -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFEB3B;
+            intensity: 0.6;
+            distance: 3;
+          "
+          position="0 1.5 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="1.5"
+          height="2"
+          depth="1.5"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room4-flag2"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Interactive Object 3: Flag of Đông Dương Cộng sản Liên đoàn (Indochina Communist League) -->
+      <a-entity position="3 1.5 -8" id="flag3-entity">
+        <!-- Flag pole -->
+        <a-cylinder
+          position="0 0.8 0"
+          radius="0.03"
+          height="1.6"
+          color="#8D6E63">
+        </a-cylinder>
+
+        <!-- Flag (red with yellow star - right group) -->
+        <a-plane
+          width="0.8"
+          height="0.6"
+          position="0.4 1.5 0"
+          color="#B71C1C"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room4-flag3;
+            title: Đông Dương Cộng sản Liên đoàn - Nhóm Nam Kỳ;
+            description: Tháng 9 năm 1929, tại Sài Gòn, các cán bộ cộng sản thành lập 'Đông Dương Cộng sản Liên đoàn' - đại diện cho phong trào cách mạng ở Nam Kỳ (miền Nam Việt Nam).\n\nNhóm này hoạt động mạnh mẽ trong phong trào công nhân ở Sài Gòn và các tỉnh Nam Bộ, tổ chức đình công và biểu tình phản đối chế độ thực dân.\n\nĐầu năm 1930, tình hình đã chín muồi cho việc thống nhất:\n\n**Yêu cầu khách quan:**\n- Phong trào công nhân và nông dân phát triển mạnh mẽ\n- Cần có một đảng thống nhất để lãnh đạo\n- Áp lực từ Quốc tế Cộng sản\n- Nguy cơ đàn áp từ thực dân Pháp\n\n**Hội nghị Hương Cảng (3-7/2/1930):**\nNguyễn Ái Quốc triệu tập đại diện ba tổ chức họp tại Cửu Long, Hương Cảng (Hong Kong). Sau 5 ngày thảo luận sôi nổi, ngày 3 tháng 2 năm 1930, ba tổ chức chính thức hợp nhất thành 'Đảng Cộng sản Việt Nam'.\n\nĐây là bước ngoặt lịch sử, đánh dấu sự ra đời của lực lượng lãnh đạo cách mạng Việt Nam.\n\n'Đảng là người lãnh đạo, người tổ chức, người đấu tranh cho lợi ích của giai cấp và dân tộc.' - Hồ Chí Minh;
+            image: ;
+            highlightColor: #FFEB3B;
+            highlightIntensity: 2.5;
+          ">
+          <!-- Star on flag -->
+          <a-cone
+            position="0 0 0.02"
+            radius-bottom="0.15"
+            height="0.02"
+            rotation="0 0 0"
+            color="#FFD700"
+            material="emissive: #FFD700; emissiveIntensity: 1.0">
+          </a-cone>
+        </a-plane>
+
+        <!-- Base pedestal -->
+        <a-cylinder
+          position="0 0.3 0"
+          radius="0.3"
+          height="0.6"
+          color="#616161">
+        </a-cylinder>
+
+        <!-- Glow effect -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFEB3B;
+            intensity: 0.6;
+            distance: 3;
+          "
+          position="0 1.5 0">
+        </a-entity>
+
+        <!-- Clickable collision box -->
+        <a-box
+          class="clickable"
+          width="1.5"
+          height="2"
+          depth="1.5"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room4-flag3"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- ============================================ -->
+      <!-- SPECIAL EVENT: FLAG MERGER ANIMATION -->
+      <!-- (Triggered when room4 complete) -->
+      <!-- ============================================ -->
+      <a-entity id="unified-flag" visible="false" position="0 2.5 -8">
+        <!-- Large unified Communist Party flag -->
+        <a-plane
+          width="2.5"
+          height="1.8"
+          color="#C62828"
+          material="emissive: #C62828; emissiveIntensity: 0.5"
+          animation__appear="
+            property: scale;
+            from: 0.1 0.1 0.1;
+            to: 1 1 1;
+            dur: 2000;
+            easing: easeOutElastic;
+            startEvents: show-unified-flag;
+          ">
+
+          <!-- Large golden star -->
+          <a-ring
+            position="0 0 0.02"
+            radius-inner="0.45"
+            radius-outer="0.55"
+            color="#FFD700"
+            material="emissive: #FFD700; emissiveIntensity: 1.5; side: double"
+            animation__rotate="
+              property: rotation;
+              to: 0 0 360;
+              dur: 3000;
+              loop: true;
+              easing: linear;
+            ">
+          </a-ring>
+
+          <!-- Text: ĐẢNG CỘNG SẢN VIỆT NAM -->
+          <a-entity
+            position="0 -1 0.05"
+            vietnamese-text="
+              value: ĐẢNG CỘNG SẢN VIỆT NAM\n3 THÁNG 2 NĂM 1930;
+              color: #FFD700;
+              fontSize: 0.2;
+              align: center;
+              width: 3;
+            ">
+          </a-entity>
+        </a-plane>
+
+        <!-- Particle celebration effect -->
+        <a-entity
+          particle-system="
+            preset: dust;
+            particleCount: 200;
+            color: #FFD700, #FF5252;
+            size: 3;
+            maxAge: 3;
+          "
+          position="0 0 0">
+        </a-entity>
+
+        <!-- Dramatic light burst -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFD700;
+            intensity: 2.0;
+            distance: 15;
+          "
+          animation__pulse="
+            property: light.intensity;
+            from: 0.5;
+            to: 2.5;
+            dur: 1000;
+            dir: alternate;
+            loop: true;
+            easing: easeInOutSine;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- ============================================ -->
+      <!-- DOORS (Room 4) -->
+      <!-- ============================================ -->
+
+      <!-- Door to Ending Room (locked initially) -->
+      <a-entity
+        position="0 0 -14"
+        door-portal="
+          targetRoom: ending;
+          locked: true;
+          activationDistance: 3.5;
+        ">
+        <!-- Door frame (golden for finale) -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#BF360C"
+          shadow="cast: true"
+          material="roughness: 0.5; metalness: 0.3">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Phòng Kỷ niệm\nHành trình hoàn thành\n(Khám phá 3/3 lá cờ để mở khóa);
+            color: #FFD700;
+            fontSize: 0.2;
+            align: center;
+            width: 5;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Door back to Room 3 -->
+      <a-entity
+        position="0 0 8"
+        rotation="0 180 0"
+        door-portal="
+          targetRoom: room3;
+          locked: false;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#BF360C"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Quay về Phòng 3: Quảng Châu;
+            color: #FFFFFF;
+            fontSize: 0.25;
+            align: center;
+            width: 5;
+          ">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+    <!-- ============================================ -->
+    <!-- ENDING ROOM (Kỷ niệm - Celebration) -->
+    <!-- Celebration Theme - Golden/Victory palette -->
+    <!-- ============================================ -->
+    <a-entity id="ending" visible="false">
+
+      <!-- Sky (Golden celebration) -->
+      <a-sky color="#FFA000"></a-sky>
+
+      <!-- Ground Plane (Polished golden floor) -->
+      <a-plane
+        ground
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="50"
+        height="50"
+        color="#F57F17"
+        shadow="receive: true"
+        material="roughness: 0.2; metalness: 0.6">
+      </a-plane>
+
+      <!-- Room Walls (Golden celebration) -->
+      <!-- Back wall -->
+      <a-plane
+        position="0 2.5 -15"
+        rotation="0 0 0"
+        width="30"
+        height="5"
+        color="#FFB300"
+        material="side: double; emissive: #FFB300; emissiveIntensity: 0.3">
+      </a-plane>
+
+      <!-- Left wall -->
+      <a-plane
+        position="-15 2.5 0"
+        rotation="0 90 0"
+        width="30"
+        height="5"
+        color="#FFA000"
+        material="side: double; emissive: #FFA000; emissiveIntensity: 0.3">
+      </a-plane>
+
+      <!-- Right wall -->
+      <a-plane
+        position="15 2.5 0"
+        rotation="0 -90 0"
+        width="30"
+        height="5"
+        color="#FFA000"
+        material="side: double; emissive: #FFA000; emissiveIntensity: 0.3">
+      </a-plane>
+
+      <!-- Room Title -->
+      <a-entity
+        position="0 3.5 -14.5"
+        vietnamese-text="
+          value: HÀNH TRÌNH HOÀN THÀNH\n\nKỷ nguyên mới đã bắt đầu\nĐảng Cộng sản Việt Nam ra đời\n\n1911 - 1930: 19 năm tìm đường cứu nước;
+          color: #FFD700;
+          fontSize: 0.35;
+          align: center;
+          width: 12;
+        ">
+      </a-entity>
+
+      <!-- Room-specific Lighting (Bright celebratory) -->
+      <a-entity
+        light="
+          type: ambient;
+          color: #FFECB3;
+          intensity: 0.8;
+        ">
+      </a-entity>
+
+      <a-entity
+        light="
+          type: directional;
+          color: #FFC107;
+          intensity: 1.0;
+          castShadow: true;
+        "
+        position="0 15 0">
+      </a-entity>
+
+      <!-- Golden hemisphere lighting -->
+      <a-entity
+        light="
+          type: hemisphere;
+          color: #FFD54F;
+          groundColor: #FF8F00;
+          intensity: 0.7;
+        ">
+      </a-entity>
+
+      <!-- Central Monument: Large Vietnamese Flag -->
+      <a-entity position="0 2.5 -10">
+        <!-- Flag pole -->
+        <a-cylinder
+          position="0 0 0"
+          radius="0.1"
+          height="5"
+          color="#8D6E63"
+          shadow="cast: true">
+        </a-cylinder>
+
+        <!-- Large Vietnamese flag -->
+        <a-plane
+          position="1.5 2.5 0"
+          width="3"
+          height="2"
+          color="#C62828"
+          material="emissive: #C62828; emissiveIntensity: 0.5; side: double"
+          animation__wave="
+            property: rotation;
+            from: 0 0 -5;
+            to: 0 0 5;
+            dur: 2000;
+            dir: alternate;
+            loop: true;
+            easing: easeInOutSine;
+          ">
+
+          <!-- Large golden star -->
+          <a-ring
+            position="0 0 0.02"
+            radius-inner="0.4"
+            radius-outer="0.5"
+            color="#FFD700"
+            material="emissive: #FFD700; emissiveIntensity: 2.0; side: double"
+            animation__rotate="
+              property: rotation;
+              to: 0 0 360;
+              dur: 4000;
+              loop: true;
+              easing: linear;
+            ">
+          </a-ring>
+        </a-plane>
+
+        <!-- Dramatic uplighting -->
+        <a-entity
+          light="
+            type: point;
+            color: #FFD700;
+            intensity: 2.5;
+            distance: 20;
+          "
+          position="0 0 0"
+          animation__pulse="
+            property: light.intensity;
+            from: 1.5;
+            to: 3.0;
+            dur: 2000;
+            dir: alternate;
+            loop: true;
+            easing: easeInOutSine;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Continuous particle celebration -->
+      <a-entity
+        particle-system="
+          preset: default;
+          particleCount: 500;
+          color: #FFD700, #FF5252, #FFFFFF;
+          size: 2;
+          maxAge: 5;
+          accelerationValue: 0 -1 0;
+          velocityValue: 0 8 0;
+          velocitySpread: 5 2 5;
+        "
+        position="0 0 -10">
+      </a-entity>
+
+      <!-- Left particle emitter -->
+      <a-entity
+        particle-system="
+          preset: dust;
+          particleCount: 200;
+          color: #FFD700;
+          size: 3;
+          maxAge: 4;
+        "
+        position="-8 0 -10">
+      </a-entity>
+
+      <!-- Right particle emitter -->
+      <a-entity
+        particle-system="
+          preset: dust;
+          particleCount: 200;
+          color: #FFD700;
+          size: 3;
+          maxAge: 4;
+        "
+        position="8 0 -10">
+      </a-entity>
+
+      <!-- Timeline Display (Left side) -->
+      <a-entity position="-6 2 -12">
+        <a-entity
+          vietnamese-text="
+            value: TIMELINE\n\n1911 - Khởi hành ra đi\n1919 - Versailles\n1920 - Khám phá Lênin\n1925 - Thành lập Hội Thanh niên\n1927 - Đường Kách mệnh\n1930 - Thành lập Đảng;
+            color: #FFFFFF;
+            fontSize: 0.2;
+            align: left;
+            width: 4;
+          ">
+        </a-entity>
+
+        <!-- Decorative frame -->
+        <a-box
+          position="0 0 -0.1"
+          width="4.5"
+          height="3"
+          depth="0.05"
+          color="#BF360C"
+          material="opacity: 0.3; transparent: true">
+        </a-box>
+      </a-entity>
+
+      <!-- Key Achievements Display (Right side) -->
+      <a-entity position="6 2 -12">
+        <a-entity
+          vietnamese-text="
+            value: THÀNH TỰU\n\n✓ Tìm ra con đường cứu nước\n✓ Phát hiện chủ nghĩa Mác-Lênin\n✓ Đào tạo cán bộ cách mạng\n✓ Thống nhất phong trào\n✓ Thành lập Đảng lãnh đạo\n✓ Mở ra kỷ nguyên mới;
+            color: #FFFFFF;
+            fontSize: 0.2;
+            align: left;
+            width: 4;
+          ">
+        </a-entity>
+
+        <!-- Decorative frame -->
+        <a-box
+          position="0 0 -0.1"
+          width="4.5"
+          height="3"
+          depth="0.05"
+          color="#BF360C"
+          material="opacity: 0.3; transparent: true">
+        </a-box>
+      </a-entity>
+
+      <!-- Famous Quote (Center, elevated) -->
+      <a-entity position="0 4 -14">
+        <a-entity
+          vietnamese-text="
+            value: 'Không có gì quý hơn\nđộc lập tự do'\n\n- Hồ Chí Minh;
+            color: #FFD700;
+            fontSize: 0.4;
+            align: center;
+            width: 8;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Credits Panel (Lower center) -->
+      <a-entity position="0 1 -14">
+        <a-entity
+          vietnamese-text="
+            value: BẢO TÀNG ẢO NGUYỄN ÁI QUỐC\nVirtual Museum of Nguyễn Ái Quốc\n\nHành trình 1911-1930\n\nCảm ơn bạn đã tham quan!\n\nGenerated with Claude Code\nAnthropic © 2025;
+            color: #FFFFFF;
+            fontSize: 0.15;
+            align: center;
+            width: 6;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Interactive Restart/Return Elements -->
+      <a-entity position="-3 0.5 -6">
+        <!-- "Return to Home" pedestal -->
+        <a-cylinder
+          radius="0.6"
+          height="1"
+          color="#1976D2"
+          shadow="cast: true"
+          material="emissive: #1976D2; emissiveIntensity: 0.5"
+          animation__bounce="
+            property: position;
+            from: -3 0.5 -6;
+            to: -3 0.8 -6;
+            dur: 1000;
+            dir: alternate;
+            loop: true;
+            easing: easeInOutQuad;
+          ">
+        </a-cylinder>
+
+        <!-- Label above -->
+        <a-entity
+          position="0 1.5 0"
+          vietnamese-text="
+            value: Quay về Sảnh chính\n\n(Di chuyển tới đây và nhấn R);
+            color: #FFFFFF;
+            fontSize: 0.15;
+            align: center;
             width: 2;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <a-entity position="3 0.5 -6">
+        <!-- "Replay Journey" pedestal -->
+        <a-cylinder
+          radius="0.6"
+          height="1"
+          color="#4CAF50"
+          shadow="cast: true"
+          material="emissive: #4CAF50; emissiveIntensity: 0.5"
+          animation__bounce="
+            property: position;
+            from: 3 0.5 -6;
+            to: 3 0.8 -6;
+            dur: 1000;
+            dir: alternate;
+            loop: true;
+            easing: easeInOutQuad;
+          ">
+        </a-cylinder>
+
+        <!-- Label above -->
+        <a-entity
+          position="0 1.5 0"
+          vietnamese-text="
+            value: Bắt đầu lại hành trình\n\n(Di chuyển tới đây và nhấn R);
+            color: #FFFFFF;
+            fontSize: 0.15;
+            align: center;
+            width: 2;
+          ">
+        </a-entity>
+      </a-entity>
+
+      <!-- Floating golden stars (decorative) -->
+      <a-cone
+        position="-4 3 -8"
+        radius-bottom="0.3"
+        height="0.4"
+        color="#FFD700"
+        material="emissive: #FFD700; emissiveIntensity: 1.5"
+        animation__float="
+          property: position;
+          from: -4 3 -8;
+          to: -4 3.5 -8;
+          dur: 2000;
+          dir: alternate;
+          loop: true;
+          easing: easeInOutSine;
+        "
+        animation__rotate="
+          property: rotation;
+          to: 0 360 0;
+          dur: 3000;
+          loop: true;
+          easing: linear;
+        ">
+      </a-cone>
+
+      <a-cone
+        position="4 3 -8"
+        radius-bottom="0.3"
+        height="0.4"
+        color="#FFD700"
+        material="emissive: #FFD700; emissiveIntensity: 1.5"
+        animation__float="
+          property: position;
+          from: 4 3 -8;
+          to: 4 3.5 -8;
+          dur: 2000;
+          dir: alternate;
+          loop: true;
+          easing: easeInOutSine;
+        "
+        animation__rotate="
+          property: rotation;
+          to: 0 360 0;
+          dur: 3000;
+          loop: true;
+          easing: linear;
+        ">
+      </a-cone>
+
+      <a-cone
+        position="0 4.5 -8"
+        radius-bottom="0.4"
+        height="0.5"
+        color="#FFD700"
+        material="emissive: #FFD700; emissiveIntensity: 1.8"
+        animation__float="
+          property: position;
+          from: 0 4.5 -8;
+          to: 0 5 -8;
+          dur: 2500;
+          dir: alternate;
+          loop: true;
+          easing: easeInOutSine;
+        "
+        animation__rotate="
+          property: rotation;
+          to: 0 360 0;
+          dur: 4000;
+          loop: true;
+          easing: linear;
+        ">
+      </a-cone>
+
+      <!-- Door back to Room 4 (unlocked) -->
+      <a-entity
+        position="0 0 8"
+        rotation="0 180 0"
+        door-portal="
+          targetRoom: room4;
+          locked: false;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1.5 0"
+          width="2.5"
+          height="3.5"
+          depth="0.3"
+          color="#BF360C"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 4 0.3"
+          vietnamese-text="
+            value: Quay về Phòng 4;
+            color: #FFFFFF;
+            fontSize: 0.25;
+            align: center;
+            width: 3;
           ">
         </a-entity>
       </a-entity>

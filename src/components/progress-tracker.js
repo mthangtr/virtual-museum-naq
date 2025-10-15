@@ -91,6 +91,7 @@ AFRAME.registerComponent('progress-tracker', {
     this.updateHUDDisplay();
     
     console.log(`[ProgressTracker] Initialized for ${this.data.roomId} - ${this.totalObjects} objects required`);
+    console.log(`[ProgressTracker] Current progress: ${this.completedObjects.size}/${this.totalObjects}, completed objects:`, Array.from(this.completedObjects));
   },
 
   /**
@@ -164,18 +165,53 @@ AFRAME.registerComponent('progress-tracker', {
       return;
     }
     
-    const door = roomEntity.querySelector(this.data.doorSelector);
-    if (door) {
-      door.setAttribute('door-portal', 'locked', false);
-      console.log(`[ProgressTracker] Door unlocked for ${this.data.roomId}`);
+    // Find all doors in this room
+    const doors = roomEntity.querySelectorAll('[door-portal]');
+    console.log(`[ProgressTracker] Found ${doors.length} doors in ${this.data.roomId}`);
+    
+    if (doors.length === 0) {
+      console.warn(`[ProgressTracker] No doors found in ${this.data.roomId}`);
+      return;
+    }
+    
+    // Unlock all forward-facing doors (not back to previous room)
+    let unlockedCount = 0;
+    doors.forEach(door => {
+      const doorComponent = door.components['door-portal'];
+      if (!doorComponent) {
+        console.warn('[ProgressTracker] Door has no door-portal component');
+        return;
+      }
       
-      // Play unlock sound effect (if audio manager exists)
+      const isLocked = doorComponent.data.locked;
+      const targetRoom = doorComponent.data.targetRoom;
+      
+      console.log(`[ProgressTracker] Door to ${targetRoom}, locked: ${isLocked}`);
+      
+      // Only unlock locked doors (don't touch already unlocked back doors)
+      if (isLocked) {
+        // Use component's unlock method instead of setAttribute to preserve all properties
+        if (doorComponent.unlock) {
+          doorComponent.unlock();
+          console.log(`[ProgressTracker] Unlocked door to ${targetRoom}`);
+          unlockedCount++;
+        }
+      }
+    });
+    
+    if (unlockedCount > 0) {
+      // Play unlock sound effect
       this.el.sceneEl.emit('play-sound', {
         soundId: 'door-unlock',
         volume: 0.5
       });
-    } else {
-      console.warn(`[ProgressTracker] Door not found in ${this.data.roomId}`);
+      
+      // Show notification
+      this.el.sceneEl.emit('show-notification', {
+        message: 'Cửa đã mở khóa! Nhấn E để tiến vào phòng tiếp theo.',
+        duration: 4000,
+        type: 'success'
+      });
     }
   },
 
@@ -196,9 +232,25 @@ AFRAME.registerComponent('progress-tracker', {
    * Update HUD progress display
    */
   updateHUDDisplay: function() {
+    // Get the room manager to check current room
+    const roomManager = document.querySelector('[room-manager]');
+    if (roomManager && roomManager.components['room-manager']) {
+      const currentRoom = roomManager.components['room-manager'].data.currentRoom;
+      
+      // Only update HUD if this is the current room's tracker
+      if (currentRoom !== this.data.roomId) {
+        console.log(`[ProgressTracker] Skipping HUD update - not current room (current: ${currentRoom}, this: ${this.data.roomId})`);
+        return;
+      }
+    }
+    
     const progressElement = document.getElementById('progress');
     if (progressElement) {
+      // Show progress element
+      progressElement.style.display = 'inline-block';
       progressElement.textContent = `${this.completedObjects.size}/${this.totalObjects}`;
+      
+      console.log(`[ProgressTracker] HUD updated: ${this.completedObjects.size}/${this.totalObjects} for ${this.data.roomId}`);
       
       // Add completion styling
       if (this.isRoomComplete) {
@@ -219,6 +271,22 @@ AFRAME.registerComponent('progress-tracker', {
     
     // Only update if entering our tracked room
     if (newRoomId === this.data.roomId) {
+      // Update room name in HUD
+      const roomNames = {
+        'home': 'Sảnh chính',
+        'room1': 'Phòng 1: Khởi hành (1911-1919)',
+        'room2': 'Phòng 2: Ánh sáng Lênin (1920-1923)',
+        'room3': 'Phòng 3: Quảng Châu (1924-1927)',
+        'room4': 'Phòng 4: Hương Cảng (1930)',
+        'ending': 'Kỷ nguyên mới'
+      };
+      
+      const roomNameEl = document.getElementById('room-name');
+      if (roomNameEl && roomNames[this.data.roomId]) {
+        roomNameEl.textContent = roomNames[this.data.roomId];
+      }
+      
+      // Update progress display
       this.updateHUDDisplay();
       console.log(`[ProgressTracker] Entered ${this.data.roomId}, progress: ${this.completedObjects.size}/${this.totalObjects}`);
     }

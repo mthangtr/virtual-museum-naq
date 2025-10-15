@@ -163,6 +163,9 @@ AFRAME.registerComponent('room-manager', {
     state.entity.setAttribute('visible', true);
 
     console.log(`[Room Manager] Showing room: ${roomId}`);
+    
+    // Emit room-enter event so progress tracker can update HUD
+    this.el.sceneEl.emit('room-enter', { roomId: roomId });
   },
 
   hideRoom: function (roomId) {

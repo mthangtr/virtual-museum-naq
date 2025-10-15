@@ -153,8 +153,8 @@ const UIController = (function() {
     hud.style.display = 'block';
     
     // Set initial values
-    updateRoomName('Phòng Khởi đầu');
-    updateProgress(0, 3);
+    updateRoomName('Sảnh chính');
+    updateProgress(0, 0); // Home has no objectives
   }
 
   /**
@@ -332,13 +332,19 @@ const UIController = (function() {
   function updateProgress(current, total) {
     const progressEl = document.getElementById('progress');
     if (progressEl) {
-      progressEl.textContent = `${current}/${total}`;
-      
-      // Add completion styling
-      if (current >= total) {
-        progressEl.style.color = '#4CAF50';
+      // Hide progress if total is 0 (like in Home room with no objectives)
+      if (total === 0) {
+        progressEl.style.display = 'none';
       } else {
-        progressEl.style.color = '#FFFFFF';
+        progressEl.style.display = 'inline-block';
+        progressEl.textContent = `${current}/${total}`;
+        
+        // Add completion styling
+        if (current >= total) {
+          progressEl.style.color = '#4CAF50';
+        } else {
+          progressEl.style.color = '#FFFFFF';
+        }
       }
     }
   }

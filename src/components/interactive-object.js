@@ -154,6 +154,9 @@ AFRAME.registerComponent('interactive-object', {
   onMouseEnter: function(evt) {
     if (!this.data.enabled) return;
     
+    // CRITICAL: Only allow interaction if parent room is visible
+    if (!this.isParentRoomVisible()) return;
+    
     this.isHovered = true;
     
     // Apply highlight effect (always, even if completed)
@@ -197,6 +200,12 @@ AFRAME.registerComponent('interactive-object', {
    */
   onClick: function(evt) {
     if (!this.data.enabled) return;
+    
+    // CRITICAL: Only allow interaction if parent room is visible
+    if (!this.isParentRoomVisible()) {
+      console.warn(`[InteractiveObject] Click ignored - parent room invisible: ${this.data.objectId}`);
+      return;
+    }
     
     // Prevent double-click race condition
     if (this.isProcessing) {
@@ -388,6 +397,23 @@ AFRAME.registerComponent('interactive-object', {
     if (oldData.audioFile !== this.data.audioFile && this.data.enableAudio) {
       this.loadAudio();
     }
+  },
+
+  /**
+   * Check if parent room is visible
+   */
+  isParentRoomVisible: function() {
+    let parentRoom = this.el.parentElement;
+    
+    // Traverse up to find room entity
+    while (parentRoom && !parentRoom.id) {
+      parentRoom = parentRoom.parentElement;
+    }
+    
+    if (!parentRoom) return true; // No room parent, allow
+    
+    const isVisible = parentRoom.getAttribute('visible');
+    return isVisible;
   },
 
   /**

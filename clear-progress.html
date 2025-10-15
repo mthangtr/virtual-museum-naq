@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clear Progress</title>
+</head>
+<body>
+  <h1>Clear Museum Progress</h1>
+  <button onclick="clearProgress()">Clear All Progress</button>
+  <div id="result"></div>
+  
+  <script>
+    function clearProgress() {
+      // Clear all museum progress
+      const keys = Object.keys(localStorage);
+      let cleared = 0;
+      
+      keys.forEach(key => {
+        if (key.startsWith('museum-progress-')) {
+          localStorage.removeItem(key);
+          cleared++;
+        }
+      });
+      
+      document.getElementById('result').innerHTML = 
+        `<p style="color: green;">Cleared ${cleared} progress entries!</p>
+         <p>Now go back to <a href="index.html">index.html</a></p>`;
+    }
+    
+    // Show current progress
+    window.onload = function() {
+      const keys = Object.keys(localStorage);
+      const museumKeys = keys.filter(k => k.startsWith('museum-progress-'));
+      
+      if (museumKeys.length > 0) {
+        document.getElementById('result').innerHTML += 
+          `<p>Found ${museumKeys.length} saved progress entries:</p><ul>`;
+        
+        museumKeys.forEach(key => {
+          const data = JSON.parse(localStorage.getItem(key));
+          document.getElementById('result').innerHTML += 
+            `<li>${key}: ${data.completedObjects.length}/${data.completedObjects.length} objects</li>`;
+        });
+        
+        document.getElementById('result').innerHTML += '</ul>';
+      }
+    };
+  </script>
+</body>
+</html>
