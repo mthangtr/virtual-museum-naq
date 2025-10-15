@@ -55,9 +55,60 @@ AFRAME.registerComponent('click-forwarder', {
   },
 
   /**
+   * Extract room ID from target object ID
+   * Example: "obj-room1-map" -> "room1"
+   */
+  extractRoomIdFromObjectId: function() {
+    const objectId = this.targetId;
+    
+    // Format: obj-{roomId}-{name}
+    const parts = objectId.split('-');
+    if (parts.length >= 3 && parts[0] === 'obj') {
+      return parts[1]; // returns "room1", "room2", etc.
+    }
+    
+    return null;
+  },
+
+  /**
+   * Check if target object belongs to the currently visible room
+   * SIMPLE APPROACH: Extract roomId from objectId and compare with currentRoom
+   */
+  isInCurrentRoom: function() {
+    // Get room ID from target object's ID
+    const myRoomId = this.extractRoomIdFromObjectId();
+    
+    // If we couldn't extract room ID, allow interaction
+    if (!myRoomId) {
+      return true;
+    }
+    
+    // Get current room from room-manager
+    const roomManager = document.querySelector('[room-manager]');
+    if (!roomManager || !roomManager.components['room-manager']) {
+      return true; // Allow if room-manager not available
+    }
+    
+    const currentRoom = roomManager.components['room-manager'].data.currentRoom;
+    const isInCurrentRoom = myRoomId === currentRoom;
+    
+    // Log blocking for debugging
+    if (!isInCurrentRoom) {
+      console.log(`[ClickForwarder] ${this.targetId}: Blocked - belongs to ${myRoomId}, but current room is ${currentRoom}`);
+    }
+    
+    return isInCurrentRoom;
+  },
+
+  /**
    * Forward mouse enter event
    */
   onMouseEnter: function(evt) {
+    // CRITICAL: Check if target belongs to current room first!
+    if (!this.isInCurrentRoom()) {
+      return;
+    }
+    
     const target = this.getTargetObject();
     if (target) {
       // Emit the event on the target object
@@ -74,6 +125,8 @@ AFRAME.registerComponent('click-forwarder', {
    * Forward mouse leave event
    */
   onMouseLeave: function(evt) {
+    if (!this.isInCurrentRoom()) return;
+    
     const target = this.getTargetObject();
     if (target) {
       target.emit('mouseleave', evt);
@@ -87,6 +140,12 @@ AFRAME.registerComponent('click-forwarder', {
    * Forward click event
    */
   onClick: function(evt) {
+    // CRITICAL: Check if target belongs to current room first!
+    if (!this.isInCurrentRoom()) {
+      console.warn(`[ClickForwarder] ${this.targetId}: Click blocked - not in current room`);
+      return;
+    }
+    
     const target = this.getTargetObject();
     if (target) {
       // Emit click on the target object

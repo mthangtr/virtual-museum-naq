@@ -1726,17 +1726,6 @@ Polish the transition between Room 1 and Room 2
 - ✅ HUD updates correctly per room
 - ✅ Vietnamese text rendering properly
 
-**Known Issues:**
-1. ⚠️ **CRITICAL:** Room 2 forward door misconfigured (targetRoom: home → should be room3)
-   - **Location:** index.html line 890
-   - **Impact:** Prevents progression to Room 3
-   - **Fix required:** Change one word before Sprint 6
-
-**Audit Report:**
-- Full codebase audit completed
-- Grade: A- (92/100)
-- Detailed report: `docs/reports/sprint5-codebase-audit.md`
-
 **Phase 3 Status:** 50% Complete (2/4 rooms done)
 **Ready for:** Sprint 6 - Room 3 & 4 Implementation
 

@@ -154,8 +154,8 @@ AFRAME.registerComponent('interactive-object', {
   onMouseEnter: function(evt) {
     if (!this.data.enabled) return;
     
-    // CRITICAL: Only allow interaction if parent room is visible
-    if (!this.isParentRoomVisible()) return;
+    // CRITICAL: Only allow interaction if object belongs to current room
+    if (!this.isInCurrentRoom()) return;
     
     this.isHovered = true;
     
@@ -201,9 +201,9 @@ AFRAME.registerComponent('interactive-object', {
   onClick: function(evt) {
     if (!this.data.enabled) return;
     
-    // CRITICAL: Only allow interaction if parent room is visible
-    if (!this.isParentRoomVisible()) {
-      console.warn(`[InteractiveObject] Click ignored - parent room invisible: ${this.data.objectId}`);
+    // CRITICAL: Only allow interaction if object belongs to current room
+    if (!this.isInCurrentRoom()) {
+      console.warn(`[InteractiveObject] Click ignored - ${this.data.objectId} not in current room`);
       return;
     }
     
@@ -400,20 +400,54 @@ AFRAME.registerComponent('interactive-object', {
   },
 
   /**
-   * Check if parent room is visible
+   * Extract room ID from object ID
+   * Example: "obj-room1-map" -> "room1"
+   *          "obj-room4-flag1" -> "room4"
    */
-  isParentRoomVisible: function() {
-    let parentRoom = this.el.parentElement;
+  extractRoomIdFromObjectId: function() {
+    const objectId = this.data.objectId;
     
-    // Traverse up to find room entity
-    while (parentRoom && !parentRoom.id) {
-      parentRoom = parentRoom.parentElement;
+    // Format: obj-{roomId}-{name}
+    // Split by '-' and get the second part
+    const parts = objectId.split('-');
+    if (parts.length >= 3 && parts[0] === 'obj') {
+      return parts[1]; // returns "room1", "room2", etc.
     }
     
-    if (!parentRoom) return true; // No room parent, allow
+    // Fallback: couldn't parse room ID
+    console.warn(`[InteractiveObject] ${objectId}: Could not extract room ID from object ID`);
+    return null;
+  },
+
+  /**
+   * Check if this object belongs to the currently visible room
+   * SIMPLE APPROACH: Extract roomId from objectId and compare with currentRoom
+   */
+  isInCurrentRoom: function() {
+    // Get room ID from this object's ID
+    const myRoomId = this.extractRoomIdFromObjectId();
     
-    const isVisible = parentRoom.getAttribute('visible');
-    return isVisible;
+    // If we couldn't extract room ID, allow interaction (for special objects)
+    if (!myRoomId) {
+      return true;
+    }
+    
+    // Get current room from room-manager
+    const roomManager = document.querySelector('[room-manager]');
+    if (!roomManager || !roomManager.components['room-manager']) {
+      console.warn(`[InteractiveObject] ${this.data.objectId}: room-manager not found`);
+      return true; // Allow if room-manager not available
+    }
+    
+    const currentRoom = roomManager.components['room-manager'].data.currentRoom;
+    const isInCurrentRoom = myRoomId === currentRoom;
+    
+    // Log blocking for debugging
+    if (!isInCurrentRoom) {
+      console.log(`[InteractiveObject] ${this.data.objectId}: Blocked - belongs to ${myRoomId}, but current room is ${currentRoom}`);
+    }
+    
+    return isInCurrentRoom;
   },
 
   /**

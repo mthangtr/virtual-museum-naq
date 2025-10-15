@@ -48,7 +48,6 @@ AFRAME.registerComponent('door-portal', {
     this.el.sceneEl.addEventListener('loaded', () => {
       this.camera = document.querySelector('[camera]') || document.querySelector('#camera');
       if (!this.camera) {
-        console.warn('[Door Portal] Camera not found');
       }
     });
 
@@ -58,7 +57,6 @@ AFRAME.registerComponent('door-portal', {
     // Update initial state
     this.updateVisualState();
 
-    console.log('[Door Portal] Initialized - Target:', this.data.targetRoom, '- Locked:', this.data.locked, '- Position:', this.el.getAttribute('position'));
   },
 
   createVisualIndicator: function () {
@@ -142,10 +140,8 @@ AFRAME.registerComponent('door-portal', {
   },
 
   onKeyDown: function (evt) {
-    console.log('[Door Portal] Key pressed:', evt.code, '- Expected:', this.data.activationKey, '- Player near:', this.isPlayerNear);
     if (evt.code !== this.data.activationKey) return;
     if (!this.isPlayerNear) {
-      console.log('[Door Portal] Player not near enough. Distance check failed.');
       return;
     }
     
@@ -159,14 +155,12 @@ AFRAME.registerComponent('door-portal', {
     if (parentRoom) {
       const isVisible = parentRoom.getAttribute('visible');
       if (!isVisible) {
-        console.log('[Door Portal] Ignoring - parent room invisible:', parentRoom.id, 'visible:', isVisible);
+        console.log('[] Ignoring - parent room invisible:', parentRoom.id, 'visible:', isVisible);
         return;
       }
-      console.log('[Door Portal] Parent room check passed:', parentRoom.id, 'visible:', isVisible);
     }
     
     if (this.data.locked) {
-      console.log('[Door Portal] Door is locked');
       this.showLockedMessage();
       return;
     }
@@ -177,14 +171,12 @@ AFRAME.registerComponent('door-portal', {
   activate: function () {
     if (this.isActivating) return;
     if (!this.data.targetRoom) {
-      console.error('[Door Portal] No target room specified');
       return;
     }
 
     this.isActivating = true;
 
     const doorPos = this.el.getAttribute('position');
-    console.log('[Door Portal] Activating door at position:', doorPos, '- Switching to room:', this.data.targetRoom);
 
     // Emit room switch event
     this.el.sceneEl.emit('switch-room', {
@@ -261,7 +253,6 @@ AFRAME.registerComponent('door-portal', {
   unlock: function () {
     if (!this.data.locked) return;
 
-    console.log('[Door Portal] Unlocking door to:', this.data.targetRoom);
 
     // CRITICAL: Must use setAttribute to properly update A-Frame component data
     this.el.setAttribute('door-portal', 'locked', false);
@@ -284,7 +275,6 @@ AFRAME.registerComponent('door-portal', {
   lock: function () {
     if (this.data.locked) return;
 
-    console.log('[Door Portal] Locking door to:', this.data.targetRoom);
 
     // CRITICAL: Must use setAttribute to properly update A-Frame component data
     this.el.setAttribute('door-portal', 'locked', true);
@@ -305,4 +295,3 @@ AFRAME.registerComponent('door-portal', {
   }
 });
 
-console.log('[Door Portal] Component registered');

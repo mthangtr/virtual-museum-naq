@@ -37,8 +37,10 @@
         
         museumKeys.forEach(key => {
           const data = JSON.parse(localStorage.getItem(key));
+          // Extract total objects from data or show completed count
+          const totalObjects = data.totalObjects || data.completedObjects.length;
           document.getElementById('result').innerHTML += 
-            `<li>${key}: ${data.completedObjects.length}/${data.completedObjects.length} objects</li>`;
+            `<li>${key}: ${data.completedObjects.length}/${totalObjects} objects (IDs: ${data.completedObjects.join(', ')})</li>`;
         });
         
         document.getElementById('result').innerHTML += '</ul>';

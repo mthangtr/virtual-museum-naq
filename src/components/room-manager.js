@@ -54,7 +54,14 @@ AFRAME.registerComponent('room-manager', {
 
         // Hide all rooms except current
         if (roomId !== this.data.currentRoom) {
-          roomEntity.setAttribute('visible', false);
+          // Use hideRoom() to properly disable raycasting
+          this.hideRoom(roomId);
+        } else {
+          // Ensure current room's objects are raycastable
+          const interactiveObjects = roomEntity.querySelectorAll('.interactive, .clickable');
+          interactiveObjects.forEach(obj => {
+            obj.classList.remove('raycaster-ignore');
+          });
         }
 
         console.log(`[Room Manager] Registered room: ${roomId}`);
@@ -161,6 +168,13 @@ AFRAME.registerComponent('room-manager', {
 
     state.visible = true;
     state.entity.setAttribute('visible', true);
+    
+    // Enable raycasting for interactive objects in this room
+    const interactiveObjects = state.entity.querySelectorAll('.interactive, .clickable');
+    interactiveObjects.forEach(obj => {
+      // Remove from raycaster-ignore class if it was added
+      obj.classList.remove('raycaster-ignore');
+    });
 
     console.log(`[Room Manager] Showing room: ${roomId}`);
     
@@ -174,6 +188,14 @@ AFRAME.registerComponent('room-manager', {
 
     state.visible = false;
     state.entity.setAttribute('visible', false);
+    
+    // Disable raycasting for interactive objects in this room
+    // This prevents hover/click events from triggering on hidden objects
+    const interactiveObjects = state.entity.querySelectorAll('.interactive, .clickable');
+    interactiveObjects.forEach(obj => {
+      // Add a class that raycaster should ignore
+      obj.classList.add('raycaster-ignore');
+    });
 
     console.log(`[Room Manager] Hiding room: ${roomId}`);
   },

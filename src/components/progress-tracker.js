@@ -72,6 +72,17 @@ AFRAME.registerComponent('progress-tracker', {
     this.totalObjects = this.data.requiredObjects;
     this.isRoomComplete = false;
     
+    // DEBUG: Log the objects array to verify parsing
+    console.log(`[ProgressTracker] Raw objects config for ${this.data.roomId}:`, this.data.objects);
+    console.log(`[ProgressTracker] Objects type:`, typeof this.data.objects);
+    console.log(`[ProgressTracker] Objects is array:`, Array.isArray(this.data.objects));
+    if (Array.isArray(this.data.objects)) {
+      console.log(`[ProgressTracker] Objects length:`, this.data.objects.length);
+      this.data.objects.forEach((obj, idx) => {
+        console.log(`[ProgressTracker]   [${idx}]: "${obj}" (type: ${typeof obj})`);
+      });
+    }
+    
     // Bind event handlers
     this.onObjectCompleted = this.onObjectCompleted.bind(this);
     this.onRoomEnter = this.onRoomEnter.bind(this);
@@ -100,21 +111,28 @@ AFRAME.registerComponent('progress-tracker', {
   onObjectCompleted: function(evt) {
     const objectId = evt.detail.objectId;
     
+    console.log(`[ProgressTracker] ${this.data.roomId} received object-completed event for: "${objectId}"`);
+    
     // Atomic check: If already completed, return immediately (defense against race condition)
     if (this.completedObjects.has(objectId)) {
-      console.warn(`[ProgressTracker] Duplicate completion ignored for: ${objectId}`);
+      console.warn(`[ProgressTracker] ${this.data.roomId}: Duplicate completion ignored for: ${objectId}`);
       return;
     }
     
     // Check if this object belongs to current room
-    if (!this.data.objects.includes(objectId)) {
+    const belongsToThisRoom = this.data.objects.includes(objectId);
+    console.log(`[ProgressTracker] ${this.data.roomId}: Does "${objectId}" belong to this room? ${belongsToThisRoom}`);
+    console.log(`[ProgressTracker] ${this.data.roomId}: Current objects list:`, this.data.objects);
+    
+    if (!belongsToThisRoom) {
+      console.log(`[ProgressTracker] ${this.data.roomId}: Object "${objectId}" not in our list, ignoring`);
       return; // Not our room's object
     }
     
     // Add to completed set (atomic operation)
     this.completedObjects.add(objectId);
     
-    console.log(`[ProgressTracker] Object completed: ${objectId} (${this.completedObjects.size}/${this.totalObjects})`);
+    console.log(`[ProgressTracker] ✅ ${this.data.roomId}: Object completed: ${objectId} (${this.completedObjects.size}/${this.totalObjects})`);
     
     // Update HUD
     this.updateHUDDisplay();
@@ -299,6 +317,7 @@ AFRAME.registerComponent('progress-tracker', {
     const progressData = {
       roomId: this.data.roomId,
       completedObjects: Array.from(this.completedObjects),
+      totalObjects: this.totalObjects, // Save total for reference
       isComplete: this.isRoomComplete,
       timestamp: Date.now()
     };
@@ -307,7 +326,7 @@ AFRAME.registerComponent('progress-tracker', {
     
     try {
       localStorage.setItem(storageKey, JSON.stringify(progressData));
-      console.log(`[ProgressTracker] Progress saved for ${this.data.roomId}`);
+      console.log(`[ProgressTracker] Progress saved for ${this.data.roomId}: ${this.completedObjects.size}/${this.totalObjects}`, Array.from(this.completedObjects));
     } catch (err) {
       console.warn('[ProgressTracker] Failed to save progress:', err);
     }
