@@ -12,6 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Duration**: 8-12 minutes
 - **Language**: Vietnamese (primary)
 
+- Just create a completed implementation report in docs/reports
+
 ## Development Commands
 
 ### Local Development Server
@@ -67,6 +69,7 @@ The museum consists of 5 sequential rooms that users navigate through:
 6. **Ending Room** - "Kỷ nguyên mới" (New Era) - Celebration space
 
 **Navigation Flow**:
+
 - Users must interact with 3/3 objects in each room to unlock the next door
 - Doors use visual cues (glowing, arrows) when unlocked
 - Room transitions use fade animations (1.5-2 seconds)
@@ -76,28 +79,33 @@ The museum consists of 5 sequential rooms that users navigate through:
 The project uses **A-Frame's component architecture**. Key custom components:
 
 **`room-manager.js`**
+
 - Manages room visibility and state
 - Handles preloading of room assets
 - Emits events: `room-enter`, `room-exit`, `room-transition-start`, `room-transition-complete`
 
 **`interactive-object.js`**
+
 - Handles hover states (highlight, tooltip)
 - Click interactions trigger popups with historical content
 - Tracks completion state (3/3 objects per room)
 - Audio playback for some interactions
 
 **`door-portal.js`**
+
 - Detects player proximity
 - Visual states: locked (gray), unlocked (glowing)
 - Keyboard activation (E key)
 - Triggers room transitions
 
 **`progress-tracker.js`**
+
 - Tracks objects interacted with per room
 - Updates HUD display (e.g., "2/3")
 - Emits events when room is complete
 
 **`transition-effect.js`**
+
 - Camera animations between rooms
 - Fade effects (fade-to-black, fade-to-color)
 - Locks player input during transitions
@@ -149,14 +157,14 @@ The project uses **A-Frame's component architecture**. Key custom components:
 All interactive museum objects follow this pattern:
 
 ```javascript
-AFRAME.registerComponent('interactive-object', {
+AFRAME.registerComponent("interactive-object", {
   schema: {
-    objectId: {type: 'string'},       // Unique identifier
-    title: {type: 'string'},          // Display name
-    description: {type: 'string'},    // Historical content
-    image: {type: 'string'},          // Popup image path
-    audioFile: {type: 'string'},      // Optional audio
-    completed: {type: 'boolean'}      // Interaction state
+    objectId: { type: "string" }, // Unique identifier
+    title: { type: "string" }, // Display name
+    description: { type: "string" }, // Historical content
+    image: { type: "string" }, // Popup image path
+    audioFile: { type: "string" }, // Optional audio
+    completed: { type: "boolean" }, // Interaction state
   },
 
   // Hover → Highlight + Tooltip + SFX
@@ -168,11 +176,13 @@ AFRAME.registerComponent('interactive-object', {
 ### UI/UX System
 
 **HUD (Head-Up Display)**:
+
 - Header: Museum name, audio toggle, home button, help icon
 - Footer: Current room name, progress (e.g., "2/3"), control hints
 - Crosshair: Center screen, changes to yellow when hovering interactive objects
 
 **Popup/Modal System**:
+
 - Semi-transparent background with blur
 - White/cream popup box with golden border
 - Contains: image, title, description text, quotes, close button
@@ -180,6 +190,7 @@ AFRAME.registerComponent('interactive-object', {
 - Locks player movement while open
 
 **Color Scheme**:
+
 - Red (`#C62828`): Communist Party theme, Room 4, CTAs
 - Yellow (`#FFD54F`): Highlights, star, light effects
 - Cream (`#FFF9E6`): Popup backgrounds
@@ -190,21 +201,25 @@ AFRAME.registerComponent('interactive-object', {
 ## Asset Optimization
 
 **3D Models**:
+
 - Format: GLB (binary GLTF with Draco compression)
 - Polygon count: <5000 tris per model
 - Texture size: 512x512 or 1024x1024 max
 
 **Images**:
+
 - Format: WebP (fallback to JPG)
 - Quality: 80% compression
 - Historical photos in popup modals
 
 **Audio**:
+
 - Background music: MP3, 128kbps, loops per room
 - Sound effects: MP3/OGG, 64kbps
 - Preload only current room's audio (lazy loading)
 
 **Performance Budget**:
+
 - Total bundle: <50MB
 - First room load: <5 seconds
 - Frame rate: 60fps (desktop), 30fps minimum (mobile)
@@ -238,6 +253,7 @@ AFRAME.registerComponent('interactive-object', {
 ### Modifying UI Popups
 
 Popup templates are in `/styles/popup.css`. Key properties:
+
 - Font: Noto Sans Vietnamese (body), Montserrat (headings)
 - Max width: 600px
 - Padding: 30px
@@ -247,6 +263,7 @@ Popup templates are in `/styles/popup.css`. Key properties:
 ## Historical Content Guidelines
 
 All historical content must be:
+
 - **Accurate**: Cross-referenced with official sources (Viện Hồ Chí Minh, Bảo tàng Hồ Chí Minh)
 - **Appropriate**: Suitable for educational use (students, general public)
 - **Concise**: 2-4 sentences per object description
@@ -254,6 +271,7 @@ All historical content must be:
 - **Vietnamese**: Primary language, with proper diacritics
 
 Key historical periods covered:
+
 - **1911-1919**: Departure from Vietnam, world travels, Versailles petition
 - **1920-1923**: Discovery of Leninism, founding of colonial union in France
 - **1924-1927**: Canton training center, "Đường Kách mệnh" publication
@@ -274,11 +292,13 @@ Reference `implementation-plan.md` for detailed sprint breakdown:
 **Recommended platforms**:
 
 1. **GitHub Pages** (free, easy)
+
    - Push to GitHub repository
    - Enable Pages in Settings
    - Access at `username.github.io/vnr202`
 
 2. **Netlify** (drag-and-drop)
+
    - Upload folder to Netlify
    - Auto-deploy with custom domain
 
@@ -288,46 +308,62 @@ Reference `implementation-plan.md` for detailed sprint breakdown:
 ## A-Frame Specifics
 
 **Component Registration Pattern**:
+
 ```javascript
-AFRAME.registerComponent('component-name', {
-  schema: { /* properties */ },
-  init: function() { /* on creation */ },
-  update: function() { /* on property change */ },
-  tick: function() { /* every frame */ },
-  remove: function() { /* on removal */ }
+AFRAME.registerComponent("component-name", {
+  schema: {
+    /* properties */
+  },
+  init: function () {
+    /* on creation */
+  },
+  update: function () {
+    /* on property change */
+  },
+  tick: function () {
+    /* every frame */
+  },
+  remove: function () {
+    /* on removal */
+  },
 });
 ```
 
 **Event System**:
+
 ```javascript
 // Emit event
-this.el.emit('event-name', {data: value});
+this.el.emit("event-name", { data: value });
 
 // Listen to event
-this.el.addEventListener('event-name', (evt) => {
+this.el.addEventListener("event-name", (evt) => {
   console.log(evt.detail.data);
 });
 ```
 
 **Scene Reference**:
+
 ```javascript
 // Get scene element
-const sceneEl = document.querySelector('a-scene');
+const sceneEl = document.querySelector("a-scene");
 
 // Get camera
-const camera = document.querySelector('[camera]');
+const camera = document.querySelector("[camera]");
 ```
 
 ## Common Development Tasks
 
 ### Run Tests
+
 Currently manual testing. Checklist:
+
 - Browser compatibility (Chrome, Firefox, Safari, Edge)
 - Device testing (desktop, tablet, mobile)
 - Performance profiling (Chrome DevTools)
 - User testing (3-5 people)
 
 ### Build for Production
+
 ```bash
 # Minify assets (if using build tools)
 npm run build
@@ -337,6 +373,7 @@ npm run build
 ```
 
 ### Debug Performance Issues
+
 1. Enable stats panel: `<a-scene stats>`
 2. Check FPS counter (target: 60fps desktop, 30fps mobile)
 3. Use Chrome DevTools Performance profiler

@@ -24,10 +24,16 @@
   <!-- Styles -->
   <link rel="stylesheet" href="styles/main.css">
 
-  <!-- Custom Components (will be added later) -->
-  <!-- <script src="src/components/room-manager.js"></script> -->
+  <!-- Custom Components (Sprint 2) -->
+  <script src="src/components/room-manager.js"></script>
+  <script src="src/components/enhanced-camera-controller.js"></script>
+  <script src="src/components/door-portal.js"></script>
+  <script src="src/components/mobile-touch-controls.js"></script>
+  <script src="src/components/teleport-navigation.js"></script>
+  <script src="src/components/vietnamese-text.js"></script>
+
+  <!-- Components to be added in future sprints -->
   <!-- <script src="src/components/interactive-object.js"></script> -->
-  <!-- <script src="src/components/door-portal.js"></script> -->
   <!-- <script src="src/components/progress-tracker.js"></script> -->
   <!-- <script src="src/components/transition-effect.js"></script> -->
 
@@ -41,49 +47,203 @@
 
     <!-- Assets Preloader -->
     <a-assets>
+      <!-- Vietnamese Font Support -->
+      <img id="font-roboto" src="https://cdn.aframe.io/fonts/Roboto-msdf.png" crossorigin="anonymous">
+
       <!-- Models will be loaded here -->
       <!-- Textures will be loaded here -->
       <!-- Audio will be loaded here -->
     </a-assets>
 
-    <!-- Sky -->
-    <a-sky color="#87CEEB"></a-sky>
+    <!-- Room Manager (handles room switching) -->
+    <a-entity
+      room-manager="
+        currentRoom: home;
+        rooms: home, room1;
+        transitionDuration: 1500;
+      ">
+    </a-entity>
 
-    <!-- Ground Plane -->
-    <a-plane
-      position="0 0 0"
-      rotation="-90 0 0"
-      width="50"
-      height="50"
-      color="#7BC8A4"
-      shadow="receive: true">
-    </a-plane>
+    <!-- ============================================ -->
+    <!-- HOME ROOM (Starting Area) -->
+    <!-- ============================================ -->
+    <a-entity id="home" visible="true">
 
-    <!-- Test Box (for verification) -->
-    <a-box
-      position="0 1 -5"
-      rotation="0 45 0"
-      color="#FF6B6B"
-      shadow="cast: true">
-    </a-box>
+      <!-- Sky -->
+      <a-sky color="#87CEEB"></a-sky>
 
-    <!-- Another Test Box -->
-    <a-box
-      position="3 1 -5"
-      rotation="0 0 0"
-      color="#4ECDC4"
-      shadow="cast: true">
-    </a-box>
+      <!-- Ground Plane -->
+      <a-plane
+        ground
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="50"
+        height="50"
+        color="#7BC8A4"
+        shadow="receive: true">
+      </a-plane>
 
-    <!-- Test Sphere -->
-    <a-sphere
-      position="-3 1.5 -5"
-      radius="1"
-      color="#FFE66D"
-      shadow="cast: true">
-    </a-sphere>
+      <!-- Welcome Text with Vietnamese Support -->
+      <a-entity
+        position="0 2.5 -4"
+        vietnamese-text="
+          value: Bảo tàng Ảo Nguyễn Ái Quốc\nVirtual Museum\n\nControls:\nWASD - Move\nMouse - Look around\nClick to lock cursor\nC - Crouch\nShift - Sprint\nT - Teleport mode (hold)\nE - Enter door;
+          color: #2C3E50;
+          fontSize: 0.25;
+          align: center;
+          width: 6;
+        ">
+      </a-entity>
 
-    <!-- Camera Rig with WASD Movement Controls -->
+      <!-- Test Objects -->
+      <a-box
+        position="0 1 -8"
+        rotation="0 45 0"
+        color="#FF6B6B"
+        shadow="cast: true">
+      </a-box>
+
+      <a-box
+        position="3 1 -8"
+        rotation="0 0 0"
+        color="#4ECDC4"
+        shadow="cast: true">
+      </a-box>
+
+      <a-sphere
+        position="-3 1.5 -8"
+        radius="1"
+        color="#FFE66D"
+        shadow="cast: true">
+      </a-sphere>
+
+      <!-- Door to Room 1 -->
+      <a-entity
+        position="0 0 -10"
+        door-portal="
+          targetRoom: room1;
+          locked: false;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1 0"
+          width="2"
+          height="3"
+          depth="0.2"
+          color="#8B4513"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 3.5 0.2"
+          vietnamese-text="
+            value: Room 1\n1911-1919;
+            color: #FFFFFF;
+            fontSize: 0.2;
+            align: center;
+            width: 2;
+          ">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+    <!-- ============================================ -->
+    <!-- ROOM 1 (Test Room) -->
+    <!-- ============================================ -->
+    <a-entity id="room1" visible="false">
+
+      <!-- Sky (different color) -->
+      <a-sky color="#1976D2"></a-sky>
+
+      <!-- Ground Plane -->
+      <a-plane
+        ground
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="50"
+        height="50"
+        color="#4A90E2"
+        shadow="receive: true">
+      </a-plane>
+
+      <!-- Room Title with Vietnamese Support -->
+      <a-entity
+        position="0 2.5 -4"
+        vietnamese-text="
+          value: Room 1: 1911-1919\nKhởi hành\n\nThis is a test room for navigation.;
+          color: #FFFFFF;
+          fontSize: 0.3;
+          align: center;
+          width: 6;
+        ">
+      </a-entity>
+
+      <!-- Test Objects in Room 1 -->
+      <a-cylinder
+        position="0 1 -6"
+        radius="0.5"
+        height="2"
+        color="#C62828"
+        shadow="cast: true">
+      </a-cylinder>
+
+      <a-torus
+        position="2 1.5 -6"
+        radius="0.8"
+        radius-tubular="0.2"
+        color="#FFD700"
+        shadow="cast: true">
+      </a-torus>
+
+      <a-cone
+        position="-2 1 -6"
+        radius-bottom="0.8"
+        radius-top="0"
+        height="2"
+        color="#4ECDC4"
+        shadow="cast: true">
+      </a-cone>
+
+      <!-- Door back to Home -->
+      <a-entity
+        position="0 0 5"
+        rotation="0 180 0"
+        door-portal="
+          targetRoom: home;
+          locked: false;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1 0"
+          width="2"
+          height="3"
+          depth="0.2"
+          color="#8B4513"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 3.5 0.2"
+          vietnamese-text="
+            value: Trở về Home;
+            color: #FFFFFF;
+            fontSize: 0.2;
+            align: center;
+            width: 2;
+          ">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+    <!-- ============================================ -->
+    <!-- CAMERA RIG (Enhanced Controls) -->
+    <!-- ============================================ -->
     <a-entity
       id="rig"
       position="0 1.6 0"
@@ -92,6 +252,7 @@
         speed: 0.15;
         constrainToNavMesh: false;
       ">
+
       <a-camera
         id="camera"
         look-controls="
@@ -104,6 +265,25 @@
         near="0.1"
         far="100">
       </a-camera>
+
+    </a-entity>
+
+    <!-- Mobile Touch Controls (separate entity) -->
+    <a-entity
+      mobile-touch-controls="
+        enabled: true;
+        movementSpeed: 3.5;
+        lookSensitivity: 0.003;
+      ">
+    </a-entity>
+
+    <!-- Teleport Navigation (separate entity) -->
+    <a-entity
+      teleport-navigation="
+        enabled: true;
+        maxDistance: 10;
+        transitionDuration: 800;
+      ">
     </a-entity>
 
     <!-- Lighting System -->

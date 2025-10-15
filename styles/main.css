@@ -128,6 +128,81 @@ body {
    RESPONSIVE
    =================================== */
 
+/* ===================================
+   CONTROL HINTS & MESSAGES
+   =================================== */
+
+#control-hints {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px 30px;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1001;
+  max-width: 90%;
+}
+
+#message-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.85);
+  padding: 20px 40px;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1002;
+  max-width: 80%;
+  display: none;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -60%); }
+  10% { opacity: 1; transform: translate(-50%, -50%); }
+  90% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -40%); }
+}
+
+/* ===================================
+   MOBILE TOUCH CONTROLS STYLING
+   =================================== */
+
+/* Mobile joystick and touch controls are created dynamically in JS */
+/* Additional styling is handled inline for better mobile performance */
+
+/* Pointer lock indicator */
+#pointer-lock-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(78, 205, 196, 0.9);
+  padding: 20px 40px;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1003;
+  display: none;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
 @media (max-width: 768px) {
   #header {
     font-size: 14px;
@@ -143,5 +218,29 @@ body {
   #crosshair {
     width: 30px;
     height: 30px;
+  }
+
+  #control-hints {
+    font-size: 12px;
+    padding: 10px 20px;
+    bottom: 80px;
+  }
+
+  #message-overlay {
+    font-size: 16px;
+    padding: 15px 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  #header {
+    font-size: 12px;
+    padding: 6px 15px;
+  }
+
+  #footer {
+    font-size: 12px;
+    padding: 8px 20px;
+    gap: 15px;
   }
 }
