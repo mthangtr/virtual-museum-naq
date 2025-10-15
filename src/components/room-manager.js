@@ -78,8 +78,17 @@ AFRAME.registerComponent('room-manager', {
       return;
     }
 
+    // Check if already transitioning - provide user feedback
     if (this.isTransitioning) {
       console.log('[Room Manager] Transition already in progress');
+      
+      // Show notification to user instead of silent failure
+      this.el.sceneEl.emit('show-notification', {
+        title: 'Đang chuyển phòng...',
+        message: 'Please wait for transition to complete',
+        type: 'warning',
+        duration: 1500
+      });
       return;
     }
 
@@ -89,11 +98,16 @@ AFRAME.registerComponent('room-manager', {
     }
 
     console.log(`[Room Manager] Switching from ${sourceRoom} to ${targetRoom}`);
+    
+    // Set transition flag BEFORE calling switchRoom to prevent race condition
+    this.isTransitioning = true;
+    
     this.switchRoom(sourceRoom, targetRoom);
   },
 
   switchRoom: function (fromRoom, toRoom) {
-    this.isTransitioning = true;
+    // Note: isTransitioning is already set to true in onSwitchRoom()
+    // This prevents race condition from multiple rapid calls
 
     // Emit transition start event
     this.el.sceneEl.emit('room-transition-start', {

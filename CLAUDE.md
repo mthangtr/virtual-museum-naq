@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Duration**: 8-12 minutes
 - **Language**: Vietnamese (primary)
 
-- Just create a completed implementation report in docs/reports
+- **Do not create new or redundant files. Always write to or update a single comprehensive implementation report located at docs/reports. If the file already exists, append or modify its relevant sections instead of generating duplicates**
 
 ## Development Commands
 

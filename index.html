@@ -23,6 +23,8 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/popup.css">
+  <link rel="stylesheet" href="styles/hud.css">
 
   <!-- Custom Components (Sprint 2) -->
   <script src="src/components/room-manager.js"></script>
@@ -32,9 +34,16 @@
   <script src="src/components/teleport-navigation.js"></script>
   <script src="src/components/vietnamese-text.js"></script>
 
+  <!-- Sprint 3 Components: Interactive Object System -->
+  <script src="src/components/interactive-object.js"></script>
+  <script src="src/components/progress-tracker.js"></script>
+  <script src="src/components/click-forwarder.js"></script>
+  <script src="src/components/cursor-feedback.js"></script>
+  
+  <!-- Utilities (Sprint 3) -->
+  <script src="src/utils/ui-controller.js"></script>
+
   <!-- Components to be added in future sprints -->
-  <!-- <script src="src/components/interactive-object.js"></script> -->
-  <!-- <script src="src/components/progress-tracker.js"></script> -->
   <!-- <script src="src/components/transition-effect.js"></script> -->
 
   <!-- Main App Logic -->
@@ -151,9 +160,20 @@
     </a-entity>
 
     <!-- ============================================ -->
-    <!-- ROOM 1 (Test Room) -->
+    <!-- ROOM 1 (1911-1919: Khởi hành) -->
     <!-- ============================================ -->
     <a-entity id="room1" visible="false">
+
+      <!-- Progress Tracker for Room 1 -->
+      <a-entity
+        progress-tracker="
+          roomId: room1;
+          requiredObjects: 3;
+          objects: obj-room1-ship, obj-room1-map, obj-room1-diary;
+          enablePersistence: true;
+          autoUnlockDoor: true;
+        ">
+      </a-entity>
 
       <!-- Sky (different color) -->
       <a-sky color="#1976D2"></a-sky>
@@ -173,7 +193,7 @@
       <a-entity
         position="0 2.5 -4"
         vietnamese-text="
-          value: Room 1: 1911-1919\nKhởi hành\n\nThis is a test room for navigation.;
+          value: Phòng 1: 1911-1919\nKhởi hành\n\nNhấp vào 3 hiện vật để tiếp tục;
           color: #FFFFFF;
           fontSize: 0.3;
           align: center;
@@ -181,31 +201,130 @@
         ">
       </a-entity>
 
-      <!-- Test Objects in Room 1 -->
-      <a-cylinder
-        position="0 1 -6"
-        radius="0.5"
-        height="2"
-        color="#C62828"
-        shadow="cast: true">
-      </a-cylinder>
+      <!-- Interactive Object 1: Tàu Ba Son (Ship) -->
+      <a-entity position="0 1 -6">
+        <!-- Visible object -->
+        <a-cylinder
+          radius="0.5"
+          height="2"
+          color="#C62828"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room1-ship;
+            title: Tàu Ba Son;
+            description: Ngày 5/6/1911, Nguyễn Ái Quốc rời cảng Sài Gòn trên tàu Amiral Latouche-Tréville với tư cách thợ phụ bếp, bắt đầu cuộc hành trình 30 năm đi tìm con đường cứu nước.\n\n'Tôi muốn đi ra nước ngoài để xem các nước khác họ làm thế nào, rồi về giúp đồng bào mình.';
+            image: ;
+            highlightColor: #FFD700;
+            highlightIntensity: 1.5;
+          ">
+        </a-cylinder>
+        <!-- Invisible larger collision box for easier clicking -->
+        <a-box
+          class="clickable"
+          width="2"
+          height="3"
+          depth="2"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room1-ship"
+          click-forwarder>
+        </a-box>
+      </a-entity>
 
-      <a-torus
-        position="2 1.5 -6"
-        radius="0.8"
-        radius-tubular="0.2"
-        color="#FFD700"
-        shadow="cast: true">
-      </a-torus>
+      <!-- Interactive Object 2: Bản đồ (World Map) -->
+      <a-entity position="2.5 1.5 -6">
+        <!-- Visible object -->
+        <a-torus
+          radius="0.8"
+          radius-tubular="0.2"
+          color="#FFD700"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room1-map;
+            title: Bản đồ thế giới;
+            description: Từ 1911-1919, Nguyễn Ái Quốc đã đi qua nhiều nước: Pháp, Anh, Mỹ, Phi châu... Người quan sát cuộc sống của người dân bị áp bức ở các thuộc địa, tìm hiểu phong trào đấu tranh giải phóng dân tộc.\n\n'Tôi đã đi khắp năm châu để nghiên cứu, để học hỏi.';
+            image: ;
+            highlightColor: #FFD700;
+            highlightIntensity: 1.5;
+          ">
+        </a-torus>
+        <!-- Invisible larger collision box for easier clicking -->
+        <a-box
+          class="clickable"
+          width="2.5"
+          height="2.5"
+          depth="2.5"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room1-map"
+          click-forwarder>
+        </a-box>
+      </a-entity>
 
-      <a-cone
-        position="-2 1 -6"
-        radius-bottom="0.8"
-        radius-top="0"
-        height="2"
-        color="#4ECDC4"
-        shadow="cast: true">
-      </a-cone>
+      <!-- Interactive Object 3: Nhật ký (Diary) -->
+      <a-entity position="-2.5 1 -6">
+        <!-- Visible object -->
+        <a-cone
+          radius-bottom="0.8"
+          radius-top="0"
+          height="2"
+          color="#4ECDC4"
+          shadow="cast: true"
+          class="interactive"
+          interactive-object="
+            objectId: obj-room1-diary;
+            title: Nhật ký hành trình;
+            description: Tại Hội nghị Versailles năm 1919, Nguyễn Ái Quốc đã nộp 'Bản yêu sách 8 điểm' đòi quyền tự do, dân chủ cho nhân dân Việt Nam. Đây là lần đầu tiên tiếng nói của người Việt được vang lên tại một diễn đàn quốc tế.\n\n'Tôi muốn tìm một con đường mới để cứu dân tộc.';
+            image: ;
+            highlightColor: #FFD700;
+            highlightIntensity: 1.5;
+          ">
+        </a-cone>
+        <!-- Invisible larger collision box for easier clicking -->
+        <a-box
+          class="clickable"
+          width="2.5"
+          height="3"
+          depth="2.5"
+          opacity="0"
+          material="transparent: true; visible: false"
+          data-interactive-target="obj-room1-diary"
+          click-forwarder>
+        </a-box>
+      </a-entity>
+
+      <!-- Door to Room 2 (locked initially) -->
+      <a-entity
+        position="0 0 -12"
+        door-portal="
+          targetRoom: home;
+          locked: true;
+          activationDistance: 3;
+        ">
+        <!-- Door frame -->
+        <a-box
+          position="0 1 0"
+          width="2"
+          height="3"
+          depth="0.2"
+          color="#8B4513"
+          shadow="cast: true">
+        </a-box>
+
+        <!-- Door label -->
+        <a-entity
+          position="0 3.5 0.2"
+          vietnamese-text="
+            value: Phòng tiếp theo\n(Hoàn thành 3/3 hiện vật);
+            color: #FFFFFF;
+            fontSize: 0.2;
+            align: center;
+            width: 3;
+          ">
+        </a-entity>
+      </a-entity>
 
       <!-- Door back to Home -->
       <a-entity
@@ -263,7 +382,25 @@
         "
         fov="75"
         near="0.1"
-        far="100">
+        far="100"
+        raycaster="
+          objects: .interactive, .clickable;
+          far: 10;
+          interval: 50;
+        "
+        cursor="
+          fuse: false;
+          rayOrigin: mouse;
+          fuseTimeout: 1500;
+        ">
+        <!-- Cursor visual feedback (center of screen) -->
+        <a-entity
+          position="0 0 -0.5"
+          geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015"
+          material="color: white; shader: flat; opacity: 0.9"
+          id="cursor-ring"
+          cursor-feedback>
+        </a-entity>
       </a-camera>
 
     </a-entity>
@@ -321,14 +458,18 @@
 
   </a-scene>
 
-  <!-- HUD Overlay (will be styled in later sprints) -->
-  <div id="hud" style="display: none;">
+  <!-- HUD Overlay -->
+  <div id="hud">
     <div id="header">
       <span id="museum-title">Bảo tàng Ảo Nguyễn Ái Quốc</span>
+      <div class="header-controls">
+        <button class="header-button icon-button" id="audio-toggle" title="Toggle Audio">🔊</button>
+        <button class="header-button icon-button" id="help-button" title="Help">❓</button>
+      </div>
     </div>
     <div id="crosshair"></div>
     <div id="footer">
-      <span id="room-name">Test Room</span>
+      <span id="room-name">Phòng Khởi đầu</span>
       <span id="progress">0/3</span>
     </div>
   </div>
